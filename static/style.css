@@ -1,0 +1,83 @@
+html{
+    scroll-behavior: smooth;
+    background-image: linear-gradient(to bottom right, #721e1e, #230909);
+    color: #FFFFFF;
+}
+
+.navbar {
+    background-color: #333;
+    overflow: hidden;
+    /* position: fixed; */
+    bottom: 0;
+    width: 100%;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+
+.rumpus-countdown-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;          /* adjust to your section height */
+    width: 100%;
+  }
+  .rumpus-countdown {
+    font-size: 8vw;             /* scales with viewport */
+    line-height: 1;
+    color: #FFFFFF;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+  /* Optional: clamp font size for very large/small screens */
+  @media (min-width: 1200px){ .rumpus-countdown { font-size: 96px; } }
+  @media (max-width: 400px){ .rumpus-countdown { font-size: 14vw; } }
+
+
+  section {
+    padding: 60px 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    align-content: center;
+    text-align: center;
+}
+
+section h2 {
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+section:nth-of-type(odd) {
+    background-color: #f4f4f4;
+}
+section:nth-of-type(even) {
+    background-color: #e2e2e2;
+}
+
+aside {
+    position: fixed;
+    float: left;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 8px;
+}
