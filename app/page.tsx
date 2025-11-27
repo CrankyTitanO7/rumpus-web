@@ -11,7 +11,7 @@ export default function RumpusHomePage(){
     {/* The main header */}
     <div className="header" id="top">
     <h1>R U M P U S!</h1>
-    <p>the only news at Yale about things at Yale</p>
+    <p style={{ fontStyle: 'italic' }}>the only news at Yale about stuff at Yale</p>
     </div>
     
     {/* The sidebar component */}
@@ -42,7 +42,7 @@ export default function RumpusHomePage(){
       </div>
       
       <div className="section" id="section3">
-      <h3>PAST ISSUES:</h3>
+      <h2>PAST ISSUES:</h2>
       {/* NOTE: Replace 'archive.html' with the Next.js Link component route for production */}
       <a href="archive.html"> 
       {/* Replace <img> with Next.js <Image> for optimization in a real app */}

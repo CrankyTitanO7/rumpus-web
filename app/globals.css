@@ -26,6 +26,21 @@ body {
   scroll-behavior: smooth;
   background-image: linear-gradient(to bottom right, #721e1e, #230909);
   color: #FFFFFF;
+  text-align:center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bolder;
+}
+
+h1 {
+  font-size: 4em;
+  margin: 0.2em 0;
+}
+
+h2 {
+  font-size: 3em;
+  margin: .2em 0;
 }
 
 .navbar {
