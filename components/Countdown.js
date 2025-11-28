@@ -49,17 +49,19 @@ export default function Countdown({ targetDate }) {
         return (
             <>
             <div className="rumpus-countdown">
-                <div className="countdown-item">
-                    <span className="countdown-value">
-                        <Image
-                            src="/freaky-joker.jpeg"
-                            alt="click here..."
-                            width={500}
-                            height={500}
-                        />
-                    </span>
-                    <span className="countdown-label">... and may the Rumpening begin...</span>
-                </div>
+                <a href="" tarket ="_blank" rel="noopener noreferrer"> {/*insert next issue link here*/}
+                    <div className="countdown-item">
+                        <span className="countdown-value">
+                            <Image
+                                src="/freaky-joker.jpeg"
+                                alt="click here..."
+                                width={500}
+                                height={500}
+                            />
+                        </span>
+                        <span className="countdown-label">... and may the Rumpening begin...</span>
+                    </div>
+                </a>
             </div>
             </>
         )

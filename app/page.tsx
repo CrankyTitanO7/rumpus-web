@@ -9,20 +9,27 @@ export default function RumpusHomePage(){
   return (
     <>
     {/* The main header */}
-<div className="header" id="top">
-    <h1>R U M P U S!</h1>
-    <p style={{ fontStyle: 'italic' }}>the only news at Yale about stuff at Yale</p>
+<div className="header" id="top" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+  <Image
+    src="/rumpus-online-logo.png"
+    alt="the Yale Rumpus Logo"
+    width={541}
+    height={193}
+  />
+  <p style={{ fontStyle: 'italic', textAlign: 'center' }}>the only news at Yale about stuff at Yale</p>
+
+    {/* The sidebar component */}
+<Sidebar />
 </div>
 
-{/* The sidebar component */}
-<Sidebar />
+
 
 {/* The main content area */}
 <div id="content">
     <div className="section" id="section1">
         <h2>COUNTDOWN TO LATEST ISSUE:</h2>
         <div className="rumpus-countdown-wrap">
-            <Countdown targetDate={new Date('2025-11-27T21:28:30')} /> {/* Set your target date here */}
+            <Countdown targetDate={new Date('2025-11-28T10:59:30')} /> {/* Set your target date here */}
         </div>
     </div>
     
