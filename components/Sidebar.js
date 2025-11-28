@@ -11,7 +11,7 @@ export default function Sidebar() {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <button className="sidebar-handle" aria-label="Open sidebar">
+      <button className="sidebar-handle" aria-label="Open sidebar" style={{ top: '10px' }}>
         ☰
       </button>
 
@@ -44,8 +44,8 @@ export default function Sidebar() {
         .sidebar-handle {
           position: absolute;
           left: 0;
-          top: 50%;
-          transform: translateY(-50%);
+          top: 10px; /* Adjusted to top left */
+          transform: translateY(0);
           width: 36px;
           height: 36px;
           background: #333;

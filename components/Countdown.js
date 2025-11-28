@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image'
 
 
 export default function Countdown({ targetDate }) {
@@ -33,36 +34,54 @@ export default function Countdown({ targetDate }) {
         return () => clearInterval(timer);
     }, [targetDate]);
     
-    if (timeLeft.days == 0 && timeLeft.hours == 0 && timeLeft.minutes == 0 && timeLeft.seconds <= 10) {
+    if (timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds <= 10 && timeLeft.seconds > 0) {
         return (
             <>
             <div className="rumpus-countdown">
                 <div className="countdown-item-final">
                 <span className="countdown-value">{timeLeft.seconds}</span>
-                <span className="countdown-label">S</span>
+                <span className="countdown-label">Seconds before the Rumpening</span>
                 </div>
             </div>
             </>
         );
+    } else if (timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0) {
+        return (
+            <>
+            <div className="rumpus-countdown">
+                <div className="countdown-item">
+                    <span className="countdown-value">
+                        <Image
+                            src="/freaky-joker.jpeg"
+                            alt="click here..."
+                            width={500}
+                            height={500}
+                        />
+                    </span>
+                    <span className="countdown-label">... and may the Rumpening begin...</span>
+                </div>
+            </div>
+            </>
+        )
     } else {
         return (
             <>
             <div className="rumpus-countdown">
                 <div className="countdown-item">
                     <span className="countdown-value">{timeLeft.days}</span>
-                    <span className="countdown-label">D</span>
+                    <span className="countdown-label">Days</span>
                 </div>
                 <div className="countdown-item">
                     <span className="countdown-value">{timeLeft.hours}</span>
-                    <span className="countdown-label">H</span>
+                    <span className="countdown-label">Hours</span>
                 </div>
                 <div className="countdown-item">
                     <span className="countdown-value">{timeLeft.minutes}</span>
-                    <span className="countdown-label">M</span>
+                    <span className="countdown-label">Minutes</span>
                 </div>
                 <div className="countdown-item">
                     <span className="countdown-value">{timeLeft.seconds}</span>
-                    <span className="countdown-label">S</span>
+                    <span className="countdown-label">Seconds</span>
                 </div>
             </div>
         </>

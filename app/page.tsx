@@ -22,12 +22,12 @@ export default function RumpusHomePage(){
     <div className="section" id="section1">
         <h2>COUNTDOWN TO LATEST ISSUE:</h2>
         <div className="rumpus-countdown-wrap">
-            <Countdown targetDate={new Date('2025-12-31T23:59:59')} /> {/* Set your target date here */}
+            <Countdown targetDate={new Date('2025-11-27T21:28:30')} /> {/* Set your target date here */}
         </div>
     </div>
     
     <div className="section" id="section2"> 
-        <h2>LATEST ISSUE:</h2>
+        <h2>our top issues:</h2>
         {/*
             NOTE: Using an iframe is fine, but be mindful of performance and security.
             In a real Next.js app, you might look into embedding or rendering the content directly.
