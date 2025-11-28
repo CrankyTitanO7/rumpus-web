@@ -1,5 +1,6 @@
 import Image from "next/image";
 import './globals.css'
+import Link from 'next/link';
 
 // import Head from 'next/head';
 import Sidebar from '../components/Sidebar.js'; 
@@ -51,17 +52,19 @@ export default function RumpusHomePage(){
         <div className="section" id="section3">
             <h2>PAST ISSUES:</h2>
             {/* NOTE: Replace 'archive.html' with the Next.js Link component route for production */}
-            <a href="archive.html"> 
+            <Link href="/past-issues">
                 {/* Replace <img> with Next.js <Image> for optimization in a real app */}
-                    <img 
-                    src="../static/past_issues.png" 
+                    <Image 
+                    src="/past_issues.png" 
                     alt="Link to Past Issues" 
                     width="300" 
                     height="400"
                     />
-                </a>
+                </Link>
             </div>
         </div>
+
+        <Link href="/about">About</Link>
         
         {/* The fixed navigation bar */}
         <div className="navbar">
