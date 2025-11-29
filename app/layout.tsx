@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "the Yale Rumpus",
   description: "the Yale Rumpus website",
+  icons: {
+    icon: "/wah.ico"
+  }
 };
 
 export default function RootLayout({

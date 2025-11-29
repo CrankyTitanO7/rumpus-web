@@ -10,43 +10,79 @@ export default function RumpusHomePage(){
   return (
     <>
     {/* The main header */}
-<div className="header" id="top" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-  <Image
-    src="/rumpus-online-logo.png"
-    alt="the Yale Rumpus Logo"
-    width={541}
-    height={193}
-  />
-  <p style={{ fontStyle: 'italic', textAlign: 'center' }}>the only news at Yale about stuff at Yale</p>
-
-    {/* The sidebar component */}
-<Sidebar />
-</div>
-
-
-
-{/* The main content area */}
-<div id="content">
-    <div className="section" id="section1">
-        <h2>COUNTDOWN TO LATEST ISSUE:</h2>
-        <div className="rumpus-countdown-wrap">
-            <Countdown targetDate={new Date('2025-11-28T10:59:30')} /> {/* Set your target date here */}
-        </div>
+    <div className="header" id="top" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Image
+        src="/rumpus-online-logo.png"
+        alt="the Yale Rumpus Logo"
+        width={541}
+        height={193}
+        />
+        <p style={{ fontStyle: 'italic', textAlign: 'center' }}>the only news at Yale about stuff at Yale</p>
+        
+        {/* The sidebar component */}
+        <Sidebar />
     </div>
-    
-    <div className="section" id="section2"> 
-        <h2>our top issues:</h2>
-        {/*
-            NOTE: Using an iframe is fine, but be mindful of performance and security.
-            In a real Next.js app, you might look into embedding or rendering the content directly.
-            */}
-            <iframe 
-            src="https://online.fliphtml5.com/sesvj/zjfg/#p=1" 
-            width="100%" 
-            height="600px" 
-            style={{ border: 'none' }} // Inline styles in React use camelCase objects
-            title="Latest Issue of RUMPUSTM"
-            ></iframe>
+
+
+
+    {/* The main content area */}
+    <div id="content">
+        <div className="section" id="section1">
+            <div className="overcast-css -effect" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.58))', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+                <h2 style= {{margin: 0 }}>COUNTDOWN TO LATEST ISSUE:</h2>
+                <div className="rumpus-countdown-wrap">
+                    <Countdown targetDate={new Date('2025-11-28T20:59:30')} /> {/* Set your target date here */}
+                </div>
+            </div>
+        </div>
+        
+        <div className="section" id="section2" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.58),rgba(255, 255, 255, 0))', backgroundSize: 'cover', backgroundPosition: 'center'}}> 
+            <h2>our top issues:</h2>
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                {/* Left column: two stacked iframes */}
+                <div style={{ flex: '0 0 48%', display: 'flex', flexDirection: 'column', gap: '16px', marginRight: '16px', marginLeft: '16px' }}>
+                    <div>
+                        <div style={{ flex: '0 0 40%', padding: '12px' }}>
+                            <h3 style={{ margin: 0 }}>Issue Highlight</h3>
+                            <p style={{ marginTop: '8px' }}>
+                                Short blurb about this issue — featured article, theme, or notable photos.
+                                Keep it concise so it sits neatly beside the upright viewer.
+                            </p>
+                            <p style={{ marginTop: '8px' }}>
+                                <a href="https://online.fliphtml5.com/sesvj/zjfg/#p=16" target="_blank" rel="noopener noreferrer">
+                                    Read the full issue
+                                </a>
+                            </p>
+                        </div>
+                        <iframe
+                        src="https://online.fliphtml5.com/sesvj/zjfg/#p=16"
+                        width="100%"
+                        height="290"
+                        style={{ border: 'none' }}
+                        title="Latest Issue - top"
+                        />
+                    </div>
+                    
+                    <iframe
+                    src="https://online.fliphtml5.com/sesvj/zjfg/#p=8"
+                    width="100%"
+                    height="290"
+                    style={{ border: 'none' }}
+                    title="Latest Issue - bottom"
+                    />
+                </div>
+                
+                {/* Right column: one large iframe */}
+                <div style={{ flex: '0 0 48%' }}>
+                    <iframe
+                    src="https://online.fliphtml5.com/sesvj/zjfg/#p=1"
+                    width="100%"
+                    height="600"
+                    style={{ border: 'none' }}
+                    title="Latest Issue - large"
+                    />
+                </div>
+            </div>
         </div>
         
         <div className="section" id="section3">
@@ -63,7 +99,7 @@ export default function RumpusHomePage(){
                 </Link>
             </div>
         </div>
-
+        
         <Link href="/about">About</Link>
         
         {/* The fixed navigation bar */}
@@ -72,7 +108,7 @@ export default function RumpusHomePage(){
             <a href="#news">News</a>
             <a href="#contact">Contact</a>
         </div>
-      </>
+        </>
     );
   }
   

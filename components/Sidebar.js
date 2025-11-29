@@ -41,6 +41,38 @@ export default function Sidebar() {
     <>
       {/* Top bar (visible when header is visible) */}
       <nav className="topbar">
+        {(() => {
+          const headlines = [
+            "what the FUCK is a CRIMSON?!?!?",
+            "suck my YICK",
+            "the curse of KAO",
+            "THE GAME is just a formality",
+            "damn Harvard, no funding?"
+          ];
+
+          return (
+            <div className="scrolling-headlines" aria-label="Latest headlines" role="region">
+              <div className="ticker">
+                <div className="ticker-track">
+                  {headlines.concat(headlines).map((h, i) => (
+                    <span className="ticker-item" key={i}>{h}</span>
+                  ))}
+                </div>
+              </div>
+
+              <style>{`
+                .scrolling-headlines { width: 100%; overflow: hidden; box-sizing: border-box; }
+                .ticker { display: block; width: 100%; overflow: hidden; }
+                .ticker-track { display: inline-flex; gap: 48px; white-space: nowrap; animation: ticker-scroll 18s linear infinite; }
+                .ticker-item { color: #000000ff; font-size: 16px; display: inline-block; padding: 8px 0; }
+                .ticker-item:hover { text-decoration: underline; }
+                @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+                /* Pause on hover */
+                // .scrolling-headlines:hover .ticker-track { animation-play-state: paused; }
+              `}</style>
+            </div>
+          );
+        })()}
           <ul>
             <li>
               <a href="#top" onClick={(e) => handleNav(e, '#top')}>top of page</a>
@@ -94,10 +126,12 @@ export default function Sidebar() {
           top: 0;
           left: 0;
           right: 0;
-          background: #333;
+          width: 100%;
+          background-image: linear-gradient(to bottom, #ffffff3b, #230909);
           padding: 12px 20px;
-          // z-index: 999;
+          z-index: 999;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          box-sizing: border-box;
         }
 
         .topbar ul {
