@@ -48,7 +48,7 @@ export default function RumpusHomePage(){
             <div className="overcast-css -effect" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.58))', backgroundSize: 'cover', backgroundPosition: 'center'}}>
                 <h2 style= {{margin: 0 }}>COUNTDOWN TO LATEST ISSUE:</h2>
                 <div className="rumpus-countdown-wrap">
-                    <Countdown targetDate={new Date('2025-11-28T20:59:30')} /> {/* Set your target date here */}
+                    <Countdown targetDate={new Date('2025-11-29T16:13:30')} /> {/* Set your target date here */}
                 </div>
             </div>
         </div>
