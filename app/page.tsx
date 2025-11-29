@@ -120,12 +120,12 @@ export default function RumpusHomePage(){
             </div>
         </div>
         
-        {/* The fixed navigation bar */}
+        {/* The fixed navigation bar
         <div className="navbar">
             <a href="#top">top of page</a>
             <a href="#news">News</a>
             <a href="#contact">Contact</a>
-        </div>
+        </div> */}
         </>
     );
   }
