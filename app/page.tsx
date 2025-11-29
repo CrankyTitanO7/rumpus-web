@@ -120,8 +120,6 @@ export default function RumpusHomePage(){
             </div>
         </div>
         
-        <Link href="/about">About</Link>
-        
         {/* The fixed navigation bar */}
         <div className="navbar">
             <a href="#top">top of page</a>

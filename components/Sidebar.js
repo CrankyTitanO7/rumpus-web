@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
@@ -86,6 +87,12 @@ export default function Sidebar() {
             <li>
               <a href="#section3" onClick={(e) => handleNav(e, '#section3')}>Past Issues</a>
             </li>
+            <li>
+              <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
+            </li>
+            <li>
+              <Link href="/about">About</Link>
+            </li>
           </ul>
         </nav>
 
@@ -114,6 +121,12 @@ export default function Sidebar() {
               <li>
                 <a href="#section3" onClick={(e) => handleNav(e, '#section3')}>Past Issues</a>
               </li>
+              <li>
+                <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
+              </li>
+              <li>
+                <Link href="/about">About</Link>
+              </li>
             </ul>
           </aside>
         </div>
@@ -123,15 +136,17 @@ export default function Sidebar() {
         /* Top bar styles */
         .topbar {
           // position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          width: 100%;
+          top: 12px;
+          left: 12px;
+          right: 12px;
+          width: auto;
           background-image: linear-gradient(to bottom, #ffffff3b, #230909);
           padding: 12px 20px;
           z-index: 999;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
           box-sizing: border-box;
+          border-radius: 12px; /* smooth corners */
+          overflow: hidden;    /* ensure rounded corners clip children */
         }
 
         .topbar ul {
@@ -175,8 +190,8 @@ export default function Sidebar() {
           left: 0;
           top: 10px;
           transform: translateY(0);
-          width: 36px;
-          height: 36px;
+          width: 50px;
+          height: 50px;
           background: #333;
           color: #fff;
           border: none;
@@ -185,7 +200,7 @@ export default function Sidebar() {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          font-size: 18px;
+          font-size: 30px;
           padding: 0;
         }
 
@@ -219,7 +234,7 @@ export default function Sidebar() {
         }
 
         .sidebar a {
-          color: inherit;
+          color: white;
           text-decoration: none;
         }
       `}</style>
