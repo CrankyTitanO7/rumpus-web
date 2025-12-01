@@ -19,7 +19,7 @@ export default function RumpusHomePage(){
             width={541}
             height={193}
           />
-          <p style={{ fontStyle: 'italic', textAlign: 'center' }}>the only news at Yale about stuff at Yale</p>
+          <p style={{ fontStyle: 'italic', textAlign: 'center', color: 'white'}}>the only news at Yale about stuff at Yale</p>
 
         </div>
 
@@ -48,7 +48,7 @@ export default function RumpusHomePage(){
             <div className="overcast-css -effect" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.58))', backgroundSize: 'cover', backgroundPosition: 'center'}}>
                 <h2 style= {{margin: 0 }}>COUNTDOWN TO LATEST ISSUE:</h2>
                 <div className="rumpus-countdown-wrap">
-                    <Countdown targetDate={new Date('2025-11-29T16:13:30')} /> {/* Set your target date here */}
+                    <Countdown targetDate={new Date('2025-12-31T16:13:30')} /> {/* Set your target date here */}
                 </div>
             </div>
         </div>
