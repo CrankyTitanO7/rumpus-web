@@ -142,3 +142,22 @@ aside {
   padding: 10px;
   border-radius: 8px;
 }
+
+.bevel-wrap {
+  padding: 0;
+  display: inline-block;
+  /* box-shadow: inset 3px 3px 6px #00000000,
+              inset -3px -3px 6px #00000000; */
+  border-radius: 3px;
+}
+.bevel-wrap iframe {
+  display: block;
+  border: none;
+}
+
+iframe {  
+  border: none;
+  border-radius: 12px;   /* adjust to taste */
+  overflow: hidden;      /* ensures the content follows the curve */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* subtle shadow for depth */
+  /* background-color: #500a0a;} */}

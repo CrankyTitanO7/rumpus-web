@@ -72,7 +72,7 @@ export default function RumpusHomePage(){
                         </p>
                       </div>
 
-                      <div style={{ flex: '1 1 40%' }}>
+                      <div className="bevel-wrap" style={{ flex: '1 1 40%' }}>
                         <iframe
                           src="https://online.fliphtml5.com/sesvj/zjfg/#p=16"
                           width="100%"
@@ -83,17 +83,17 @@ export default function RumpusHomePage(){
                       </div>
                     </div>
                     
-                    <iframe
+                    <div className="bevel-wrap"> <iframe
                     src="https://online.fliphtml5.com/sesvj/zjfg/#p=8"
                     width="100%"
                     height="290"
                     style={{ border: 'none' }}
                     title="Latest Issue - bottom"
-                    />
+                    /></div>
                 </div>
                 
                 {/* Right column: one large iframe */}
-                <div style={{ flex: '0 0 48%' }}>
+                <div className="bevel-wrap" style={{ flex: '0 0 48%' }}>
                     <iframe
                     src="https://online.fliphtml5.com/sesvj/zjfg/#p=1"
                     width="100%"
