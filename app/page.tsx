@@ -6,6 +6,10 @@ import Link from 'next/link';
 import Sidebar from '../components/Sidebar.js'; 
 import Countdown from '../components/Countdown.js';
 
+// Use dynamic import to ensure the component is rendered only on the client
+// This is good practice for components that rely heavily on browser APIs (like requestAnimationFrame)
+import DynamicGameWrapper from '@/components/DynamicGameWrapper';
+
 export default function RumpusHomePage(){
   return (
 <>
@@ -123,7 +127,8 @@ export default function RumpusHomePage(){
                 <h2>G A M E S</h2>
                 <main>
                     <h1 style={{ textAlign: 'center' }}>Flappy Bird in Next.js/React</h1>
-                    <DynamicGame />
+                    {/* 3. Render the client wrapper component */}
+                    <DynamicGameWrapper />
                 </main>
             </div>
         </div>
