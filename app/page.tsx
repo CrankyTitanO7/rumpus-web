@@ -10,6 +10,29 @@ import Countdown from '../components/Countdown.js';
 // This is good practice for components that rely heavily on browser APIs (like requestAnimationFrame)
 import DynamicGameWrapper from '@/components/DynamicGameWrapper';
 
+
+// global variables for easy reference
+
+const reference = {
+    issueurl: 'https://online.fliphtml5.com/sesvj/zjfg/',                   // link to current article viewer
+    pageref: [16, 1, 8],                                                    // page numbers for the three iframes
+    targetdate: '2025-12-31T16:13:30'                                       // target date for countdown timer
+}
+
+const referenceNext = {
+    issueurl: 'https://online.fliphtml5.com/sesvj/iljc/',                   // link to next issue article viewer
+    pageref: [12, 1, 5],                                                    // page numbers for the three iframes
+    targetdate:reference.targetdate                                         // target date for countdown timer
+}
+
+const timeZero = new Date(reference.targetdate) <= new Date();              // check if target date has passed
+
+const endref = {
+    issueurl: timeZero ? referenceNext.issueurl : reference.issueurl,       // link to current article viewer
+    pageref: timeZero ? referenceNext.pageref : reference.pageref,          // page numbers for the three iframes
+    targetdate: reference.targetdate                                        // target date for countdown timer
+}
+
 export default function RumpusHomePage(){
   return (
 <>
@@ -52,7 +75,7 @@ export default function RumpusHomePage(){
         <div className="overcast-css -effect" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.58))', backgroundSize: 'cover', backgroundPosition: 'center'}}>
             <h2 style= {{margin: 0 }}>COUNTDOWN TO LATEST ISSUE:</h2>
             <div className="rumpus-countdown-wrap">
-                <Countdown targetDate={new Date('2025-12-31T16:13:30')} /> {/* Set your target date here */}
+                <Countdown targetDate={new Date(endref.targetdate)} html={true} /> {/* Set your target date here */}
             </div>
         </div>
     </div>
@@ -70,7 +93,7 @@ export default function RumpusHomePage(){
                             Keep it concise so it sits neatly beside the upright viewer.
                         </p>
                         <p style={{ marginTop: '8px' }}>
-                            <a href="https://online.fliphtml5.com/sesvj/zjfg/#p=16" target="_blank" rel="noopener noreferrer">
+                            <a href={`${endref.issueurl}#p=${endref.pageref[0]}`} target="_blank" rel="noopener noreferrer">
                                 Read the full issue
                             </a>
                         </p>
@@ -78,7 +101,7 @@ export default function RumpusHomePage(){
                     
                     <div className="bevel-wrap" style={{ flex: '1 1 40%' }}>
                         <iframe
-                        src="https://online.fliphtml5.com/sesvj/zjfg/#p=16"
+                        src={`${endref.issueurl}#p=${endref.pageref[0]}`}
                         width="100%"
                         height="290"
                         style={{ border: 'none' }}
@@ -88,7 +111,7 @@ export default function RumpusHomePage(){
                 </div>
                 
                 <div className="bevel-wrap"> <iframe
-                    src="https://online.fliphtml5.com/sesvj/zjfg/#p=8"
+                    src={`${endref.issueurl}#p=${endref.pageref[2]}`}
                     width="100%"
                     height="290"
                     style={{ border: 'none' }}
@@ -99,7 +122,7 @@ export default function RumpusHomePage(){
                 {/* Right column: one large iframe */}
                 <div className="bevel-wrap" style={{ flex: '0 0 48%' }}>
                     <iframe
-                    src="https://online.fliphtml5.com/sesvj/zjfg/#p=1"
+                    src={`${endref.issueurl}#p=${endref.pageref[1]}`}
                     width="100%"
                     height="600"
                     style={{ border: 'none' }}
