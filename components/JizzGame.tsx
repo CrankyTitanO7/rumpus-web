@@ -12,7 +12,7 @@ export default function PowerJumpGame() {
   const birdX = 160;
   const birdRadius = 18;
   const pipeSpacing = 50;
-  const groundHeight = 80; // Define a fixed height for the ground
+  const groundHeight = 80;
 
   const birdImgRef = useRef<HTMLImageElement | null>(null);
   const eyeImgRef = useRef<HTMLImageElement | null>(null);
@@ -46,10 +46,11 @@ export default function PowerJumpGame() {
     eyeOffset: 0,
     preparingJump: false,
     jumpEffects: [] as Effect[],
+    jumpCount: 0,
+    blueTint: 0, // <-- ADDED
   });
 
   useEffect(() => {
-    // Load images
     birdImgRef.current = new Image();
     birdImgRef.current.src = '/bird.png';
     eyeImgRef.current = new Image();
@@ -76,6 +77,8 @@ export default function PowerJumpGame() {
     s.eyeOffset = 0;
     s.preparingJump = false;
     s.jumpEffects = [];
+    s.jumpCount = 0;
+    s.blueTint = 0; // <-- ADDED
     setTick(t => t + 1);
   }
 
@@ -83,7 +86,7 @@ export default function PowerJumpGame() {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
       containerRef.current.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+        console.error(`Error enabling fullscreen: ${err.message}`);
       });
     } else {
       document.exitFullscreen();
@@ -101,44 +104,43 @@ export default function PowerJumpGame() {
     s.onGround = false;
     s.powerActive = false;
     s.preparingJump = false;
+
+    s.jumpCount++;
+    s.blueTint = Math.min(0.6, s.blueTint + 0.15); // <-- ADDED
   }
 
   useEffect(() => {
     function triggerAction() {
-        const s = stateRef.current;
-        if (s.powerActive) {
-          s.preparingJump = true;
-          s.prepTime = 0;
+      const s = stateRef.current;
+      if (s.powerActive) {
+        s.preparingJump = true;
+        s.prepTime = 0;
 
-          const closeness = 1 - Math.min(1, Math.abs(s.powerPos - 0.5) * 2);
-          const effectDuration = 0.3 + (closeness * 1.2); 
+        const closeness = 1 - Math.min(1, Math.abs(s.powerPos - 0.5) * 2);
+        const effectDuration = 0.3 + (closeness * 1.2);
 
-          s.jumpEffects.push({ 
-            x: birdX, 
-            y: s.birdY + birdRadius, 
-            timer: 0, 
-            duration: effectDuration, 
-            power: closeness         
-          });
-        } else if (!s.alive) {
-            resetGame();
-        }
+        s.jumpEffects.push({
+          x: birdX,
+          y: s.birdY + birdRadius,
+          timer: 0,
+          duration: effectDuration,
+          power: closeness
+        });
+      } else if (!s.alive) {
+        resetGame();
+      }
     }
 
     function onKey(e: KeyboardEvent) {
       if (e.code === 'Space') triggerAction();
     }
-    
+
     window.addEventListener('keydown', onKey);
-    
-    return () => {
-      window.removeEventListener('keydown', onKey);
-    };
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
-    if (!canvas) return;
     canvas.width = width;
     canvas.height = height;
 
@@ -156,14 +158,12 @@ export default function PowerJumpGame() {
       const dt = Math.min(0.05, (t - lastTimeRef.current) / 1000);
       lastTimeRef.current = t;
 
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      const ctx = canvas.getContext('2d')!;
       ctx.clearRect(0, 0, width, height);
 
       const s = stateRef.current;
 
-      // --- Logic Updates (Unchanged) ---
-      // ... (Power bar, physics, collision, and pipe movement logic remains here) ...
+      // --- Update power bar ---
       if (s.powerActive && !s.preparingJump) {
         const speedFactor = Math.sin(s.powerPos * Math.PI) * 1.2 + 0.1;
         s.powerPos += s.powerDir * dt * 0.8 * speedFactor;
@@ -171,6 +171,7 @@ export default function PowerJumpGame() {
         else if (s.powerPos <= 0) { s.powerPos = 0; s.powerDir = 1; }
       }
 
+      // --- Jump prep ---
       if (s.preparingJump) {
         s.prepTime += dt;
         s.eyeOffset = Math.sin(t * 50) * 3;
@@ -179,14 +180,18 @@ export default function PowerJumpGame() {
         s.eyeOffset = 0;
       }
 
+      // --- Fade tint over time ---
+      s.blueTint = Math.max(0, s.blueTint - dt * 0.25); // <-- ADDED
+
       if (s.alive && s.pipes.length === 0) spawnPipe();
 
       const pipeSpeed = (s.onGround || !s.alive) ? 0 : (240 + s.score * 6);
+
       for (let i = s.pipes.length - 1; i >= 0; i--) {
         s.pipes[i].x -= pipeSpeed * dt;
         if (!s.pipes[i].passed && s.pipes[i].x + 48 < birdX - birdRadius) {
           s.pipes[i].passed = true;
-          s.score += 1;
+          s.score++;
           if (s.score > s.highScore) s.highScore = s.score;
           setTick(t => t + 1);
           if (s.pipes[i].x + pipeSpacing < width) spawnPipe();
@@ -204,16 +209,16 @@ export default function PowerJumpGame() {
           s.powerActive = true;
         }
       }
-      
-      // Collision Check (Kept before drawing pipes, which is fine, but needs to be drawn *after*)
+
+      // --- Collision ---
       for (const pipe of s.pipes) {
         const w = 56;
         const h = pipe.height;
         const px = pipe.x, py = groundY - h;
-        const nearestX = Math.max(px, Math.min(birdX, px + w));
-        const nearestY = Math.max(py, Math.min(s.birdY, py + h));
-        const dx = birdX - nearestX;
-        const dy = s.birdY - nearestY;
+        const nx = Math.max(px, Math.min(birdX, px + w));
+        const ny = Math.max(py, Math.min(s.birdY, py + h));
+        const dx = birdX - nx;
+        const dy = s.birdY - ny;
         if (dx * dx + dy * dy < birdRadius * birdRadius && s.alive) {
           s.alive = false;
           s.vy = 0;
@@ -223,12 +228,10 @@ export default function PowerJumpGame() {
         }
       }
 
-      // --- 🎨 NEW DRAWING ORDER ---
+      // --- DRAWING ORDER ---
 
-      // 1. Background (Farthest back)
       if (bgImgRef.current) ctx.drawImage(bgImgRef.current, 0, 0, width, height);
 
-      // 2. Pipes
       for (const pipe of s.pipes) {
         const w = 56;
         const h = pipe.height;
@@ -237,22 +240,18 @@ export default function PowerJumpGame() {
         ctx.fillStyle = '#1f6b2e';
         ctx.fillRect(pipe.x + w - 14, groundY - h, 14, h);
       }
-      
-      // 3. Ground (Drawn over the background to ensure visibility)
-      ctx.fillStyle = '#654321'; // Brown color for ground
+
+      ctx.fillStyle = '#654321';
       ctx.fillRect(0, groundY, width, groundHeight);
-      
-      // Optional: Ground Line for distinction
-      ctx.fillStyle = '#555555';
+
+      ctx.fillStyle = '#555';
       ctx.fillRect(0, groundY, width, 4);
 
-      // 4. Draw Jump Effects (Sparks) - BEHIND bird
       for (let i = s.jumpEffects.length - 1; i >= 0; i--) {
         const e = s.jumpEffects[i];
         e.timer += dt;
-        
+
         const alpha = 1 - e.timer / e.duration;
-        
         if (alpha <= 0) {
           s.jumpEffects.splice(i, 1);
           continue;
@@ -262,36 +261,34 @@ export default function PowerJumpGame() {
 
         if (sparkImgRef.current) {
           ctx.globalAlpha = alpha;
-          // Center the image on the effect coordinate
           ctx.drawImage(sparkImgRef.current, e.x - size/2, e.y - size/4, size, size);
           ctx.globalAlpha = 1;
-        } else {
-           // Fallback if no image
-           ctx.globalAlpha = alpha;
-           ctx.fillStyle = 'orange';
-           ctx.beginPath();
-           ctx.arc(e.x, e.y, size/3, 0, Math.PI*2);
-           ctx.fill();
-           ctx.globalAlpha = 1;
         }
       }
 
-      // 5. Bird Body (Middle Layer)
-      if (birdImgRef.current) ctx.drawImage(birdImgRef.current, birdX - 18, s.birdY - 18, 42, 42);
-      else {
+      // --- BIRD ---
+      if (birdImgRef.current) {
+        ctx.drawImage(birdImgRef.current, birdX - 18, s.birdY - 18, 42, 42);
+
+        // 🔵 Blue tint overlay
+        if (s.blueTint > 0) {
+          ctx.globalCompositeOperation = "source-atop";
+          ctx.fillStyle = `rgba(50,150,255,${s.blueTint})`;
+          ctx.fillRect(birdX - 18, s.birdY - 18, 42, 42);
+          ctx.globalCompositeOperation = "source-over";
+        }
+      } else {
         ctx.beginPath();
-        ctx.arc(birdX, s.birdY, birdRadius, 0, Math.PI*2);
-        ctx.fillStyle = 'yellow';
+        ctx.arc(birdX, s.birdY, birdRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "yellow";
         ctx.fill();
-        ctx.stroke();
       }
 
-      // 6. Bird Eye (Closest to Viewer)
-      if (eyeImgRef.current) ctx.drawImage(eyeImgRef.current, birdX + 2, s.birdY - 5 + s.eyeOffset, 36, 36);
+      if (eyeImgRef.current)
+        ctx.drawImage(eyeImgRef.current, birdX + 2, s.birdY - 5 + s.eyeOffset, 36, 36);
 
-      // 7. UI (Score, Power Bar - Closest to Viewer)
-      ctx.font = '28px Inter, system-ui, sans-serif';
-      ctx.fillStyle = '#fff';
+      ctx.font = "28px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "#fff";
       ctx.fillText(`Score: ${s.score}`, 18, 34);
       ctx.fillText(`High: ${s.highScore}`, 18, 64);
 
@@ -300,29 +297,26 @@ export default function PowerJumpGame() {
         const barH = 18;
         const bx = width - barW - 24;
         const by = height - 60;
-        
-        // Bar
-        ctx.fillStyle = 'rgba(255,255,255,0.12)';
+
+        ctx.fillStyle = "rgba(255,255,255,0.12)";
         ctx.fillRect(bx, by, barW, barH);
-        
-        // Center Marker
-        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+
+        ctx.fillStyle = "rgba(255,255,255,0.08)";
         ctx.fillRect(bx + barW / 2 - 1, by - 6, 2, barH + 12);
-        
-        // Cursor
+
         const cx = bx + s.powerPos * barW;
         const cy = by + barH / 2;
         ctx.beginPath();
         ctx.arc(cx, cy, 10, 0, Math.PI * 2);
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = "#fff";
         ctx.fill();
         ctx.lineWidth = 2;
-        ctx.strokeStyle = '#222';
+        ctx.strokeStyle = "#222";
         ctx.stroke();
 
-        ctx.font = '14px Inter, system-ui, sans-serif';
-        ctx.fillStyle = '#fff';
-        ctx.fillText('Click or Space to jump', bx - 2, by - 12);
+        ctx.font = "14px Inter, system-ui, sans-serif";
+        ctx.fillStyle = "#fff";
+        ctx.fillText("Click or Space to jump", bx - 2, by - 12);
       }
 
       animRef.current = requestAnimationFrame(loop);
@@ -341,13 +335,14 @@ export default function PowerJumpGame() {
     if (s.powerActive) {
       s.preparingJump = true;
       s.prepTime = 0;
-      
+
       const closeness = 1 - Math.min(1, Math.abs(s.powerPos - 0.5) * 2);
-      const effectDuration = 0.3 + (closeness * 1.2); 
-      s.jumpEffects.push({ 
-        x: birdX, 
-        y: s.birdY + birdRadius, 
-        timer: 0, 
+      const effectDuration = 0.3 + (closeness * 1.2);
+
+      s.jumpEffects.push({
+        x: birdX,
+        y: s.birdY + birdRadius,
+        timer: 0,
         duration: effectDuration,
         power: closeness
       });
@@ -360,33 +355,30 @@ export default function PowerJumpGame() {
     <div className='flex flex-col items-center justify-center p-4'>
       <div className='w-[820px] max-w-full'>
         <h1 className='text-2xl font-bold mb-3'>Power Jump — Next.js Game</h1>
-        
+
         <p className='text-sm mb-4 text-gray-700'>
-          Click or press Space to lock the power. 
+          Click or press Space to lock the power.
         </p>
 
         <div 
-            ref={containerRef}
-            className='relative rounded-lg shadow-lg overflow-hidden bg-white group'
+          ref={containerRef}
+          className='relative rounded-lg shadow-lg overflow-hidden bg-white group'
         >
-          <canvas 
-            ref={canvasRef} 
+          <canvas
+            ref={canvasRef}
             onClick={handleContainerClick}
             className="block w-full h-auto cursor-pointer object-contain bg-black"
-            style={{ 
-                maxHeight: '100vh',
-                maxWidth: '100vw'
-            }}
+            style={{ maxHeight: '100vh', maxWidth: '100vw' }}
           />
 
-          <button 
+          <button
             onClick={(e) => {
-                e.stopPropagation(); 
-                toggleFullscreen();
+              e.stopPropagation();
+              toggleFullscreen();
             }}
             className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded text-xs backdrop-blur-sm transition-opacity opacity-0 group-hover:opacity-100"
           >
-             ⛶ Fullscreen
+            ⛶ Fullscreen
           </button>
         </div>
 
