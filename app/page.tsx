@@ -157,9 +157,9 @@ export default function RumpusHomePage(){
                 </div>
                 
                 <div className="section" id="section4">
-                    <h2>G A M E S</h2>
+                    <h1>G A M E S</h1>
                     <main>
-                        <h1 style={{ textAlign: 'center' }}>Flappy Bird in Next.js/React</h1>
+                        {/* <h1 style={{ textAlign: 'center' }}>Flappy Bird in Next.js/React</h1> */}
                         {/* 3. Render the client wrapper component */}
                         <DynamicGameWrapper />
                     </main>
