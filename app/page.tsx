@@ -29,7 +29,7 @@ const referenceNext = {
     // dateform: new Date(reference.targetdate)
 }
 
-const timer = reverseTimer(new Date(reference.targetdate));     // check if target date has passed
+const timer = reverseTimer(new Date(reference.targetdate));                                 // check if target date has passed
 const timeZero = (timer.days === 0 && timer.hours === 0 && timer.minutes === 0 && timer.seconds === 0);
 
 // final reference object to use in the page
