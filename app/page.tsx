@@ -18,7 +18,7 @@ import DynamicGameWrapper from '@/components/DynamicGameWrapper';
 const reference = {
     issueurl: 'https://online.fliphtml5.com/sesvj/zjfg/',                                   // link to current article viewer
     pageref: [16, 1, 8],                                                                    // page numbers for the three iframes
-    targetdate: '2025-12-3T15:13:30'                                                        // target date for countdown timer
+    targetdate: '2025-12-31T15:13:30'                                                        // target date for countdown timer
 }
 
 // queue up next issue info

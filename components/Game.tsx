@@ -1,204 +1,290 @@
-// components/Game.tsx
-"use client";
+import React, { useEffect, useRef, useState } from "react";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  GRAVITY,
-  JUMP_VELOCITY,
-  INITIAL_BIRD_Y,
-  BIRD_SIZE,
-  PIPE_WIDTH,
-  PIPE_SPEED
-} from '@/lib/gameLogic';
+export default function PowerJumpGame() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number | null>(null);
 
-import Pipe from './Pipe'; // Assume this component exists
+  const width = 800;
+  const height = 500;
+  const groundY = height - 80;
+  const birdX = 160;
+  const birdRadius = 18;
+  const pipeSpacing = 50;
 
-interface PipeState {
-  x: number;
-  gapY: number; // Y-position of the center of the gap
-  id: number;
-}
+  const birdImgRef = useRef<HTMLImageElement | null>(null);
+  const eyeImgRef = useRef<HTMLImageElement | null>(null);
+  const bgImgRef = useRef<HTMLImageElement | null>(null);
 
-export default function Game() {
-  const [birdY, setBirdY] = useState(INITIAL_BIRD_Y);
-  const [velocity, setVelocity] = useState(0);
-  const [pipes, setPipes] = useState<PipeState[]>([]);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [score, setScore] = useState(0);
+  const sparkImgRef = useRef<HTMLImageElement | null>(null);
 
-  const requestRef = useRef<number>();
-  const lastPipeId = useRef(0);
-  const gameStarted = useRef(false);
+  const [tick, setTick] = useState(0);
 
-  // --- Core Game Loop ---
-  const gameLoop = useCallback(() => {
-    if (isGameOver) return;
+  interface Effect { x: number; y: number; timer: number }
 
-    setBirdY(prevY => {
-      // 1. Apply Gravity
-      let newVelocity = velocity + GRAVITY;
-      let newY = prevY + newVelocity;
-
-      // 2. Check for Ceiling/Floor Collision
-      if (newY < 0) newY = 0;
-      if (newY + BIRD_SIZE > GAME_HEIGHT) {
-        setIsGameOver(true);
-        return prevY; // Stop movement
-      }
-
-      setVelocity(newVelocity);
-
-      // 3. Check for Pipe Collision (Simplified for concept)
-      // This is the most complex part of the game logic.
-      // You would iterate through `pipes` and check for intersection
-      // of the bird's bounding box with the pipe's bounding box.
-      
-      // Example: check if bird is within x-range of the first pipe
-      const firstPipe = pipes[0];
-      if (firstPipe) {
-        if (newY < firstPipe.gapY - 50 || newY + BIRD_SIZE > firstPipe.gapY + 50) {
-            if (firstPipe.x < BIRD_SIZE && firstPipe.x + PIPE_WIDTH > 0) {
-                // setIsGameOver(true);
-            }
-        }
-      }
-
-      return newY;
-    });
-
-    // 4. Update Pipe Positions and Score
-    setPipes(prevPipes => {
-      const newPipes = prevPipes.map(p => ({
-        ...p,
-        x: p.x - PIPE_SPEED, // Move left
-      })).filter(p => p.x > -PIPE_WIDTH); // Remove off-screen pipes
-
-      // Check for score (bird passed a pipe)
-      prevPipes.forEach(p => {
-        if (p.x >= 0 && p.x - PIPE_SPEED < 0) { // Pipe just passed x=0
-            setScore(s => s + 1);
-        }
-      });
-      
-      // Pipe Spawning Logic (Every ~150 frames or distance)
-      if (newPipes.length === 0 || newPipes[newPipes.length - 1].x < GAME_WIDTH - 200) {
-        lastPipeId.current += 1;
-        newPipes.push({
-          x: GAME_WIDTH,
-          // Random gap Y position
-          gapY: Math.random() * (GAME_HEIGHT - 200) + 100, 
-          id: lastPipeId.current,
-        });
-      }
-
-      return newPipes;
-    });
-
-    // Request the next frame
-    requestRef.current = requestAnimationFrame(gameLoop);
-  }, [isGameOver, velocity, pipes]);
-
-  // --- Flap/Jump Functionality ---
-  const handleFlap = useCallback(() => {
-    if (isGameOver) {
-        // Reset game on first click after game over
-        setBirdY(INITIAL_BIRD_Y);
-        setVelocity(0);
-        setPipes([]);
-        setScore(0);
-        setIsGameOver(false);
-        gameStarted.current = true;
-        return;
-    }
-    if (!gameStarted.current) {
-        gameStarted.current = true;
-    }
-    setVelocity(JUMP_VELOCITY);
-  }, [isGameOver]);
+  const stateRef = useRef({
+    birdY: groundY - birdRadius,
+    vy: 0,
+    gravity: 1400,
+    onGround: true,
+    powerActive: true,
+    powerPos: 0.5,
+    powerDir: 1,
+    pipes: [] as Array<{ x: number; height: number; passed: boolean }>,
+    nextPipeX: width + 60,
+    score: 0,
+    highScore: 0,
+    alive: true,
+    prepTime: 0,
+    eyeOffset: 0,
+    preparingJump: false,
+    jumpEffects: [] as Effect[],
+  });
 
   useEffect(() => {
-    window.addEventListener('click', handleFlap);
-    window.addEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-            handleFlap();
-        }
-    });
+    birdImgRef.current = new Image();
+    birdImgRef.current.src = '/bird.png';
+    eyeImgRef.current = new Image();
+    eyeImgRef.current.src = '/eye.png';
+    bgImgRef.current = new Image();
+    bgImgRef.current.src = '/background.png';
+    sparkImgRef.current = new Image();
+    sparkImgRef.current.src = '/spark.png'; // your small image
+  }, []);
 
-    return () => {
-      window.removeEventListener('click', handleFlap);
-      window.removeEventListener('keydown', (e) => {
-        if (e.code === 'Space') {
-            handleFlap();
-        }
-      });
-    };
-  }, [handleFlap]);
+  function resetGame() {
+    const s = stateRef.current;
+    s.birdY = groundY - birdRadius;
+    s.vy = 0;
+    s.onGround = true;
+    s.powerActive = true;
+    s.powerPos = 0.5;
+    s.powerDir = 1;
+    s.pipes = [];
+    s.nextPipeX = width + 60;
+    s.score = 0;
+    s.alive = true;
+    s.prepTime = 0;
+    s.eyeOffset = 0;
+    s.preparingJump = false;
+    setTick(t => t + 1);
+  }
 
-  // Start/Stop Game Loop Effect
+  function jumpWithPower(p: number) {
+    
+    const s = stateRef.current;
+    
+    if (!s.alive) return;
+
+    
+
+    const closeness = 1 - Math.min(1, Math.abs(p - 0.5) * 2);
+    const minJump = 420;
+    const maxJump = 920;
+    s.vy = -(minJump + (maxJump - minJump) * closeness);
+    s.onGround = false;
+    s.powerActive = false;
+    s.preparingJump = false;
+  }
+
   useEffect(() => {
-    if (gameStarted.current && !isGameOver) {
-      requestRef.current = requestAnimationFrame(gameLoop);
-    } else if (requestRef.current) {
-      cancelAnimationFrame(requestRef.current);
-    }
-    return () => {
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, [gameLoop, isGameOver]);
+    function onKey(e: KeyboardEvent) {
+      if (e.code === 'Space') {
+        const s = stateRef.current;
+        if (s.powerActive) {
+          s.preparingJump = true;
+          s.prepTime = 0;
 
-  // --- Rendering ---
+          // Add effect just under bird
+          s.jumpEffects.push({ x: birdX, y: s.birdY + birdRadius, timer: 0 });
+        } else if (!s.alive) resetGame();
+      }
+    }
+    function onClick() {
+      const s = stateRef.current;
+      if (s.powerActive) {
+        s.preparingJump = true;
+        s.prepTime = 0;
+
+        // Add effect just under bird
+        s.jumpEffects.push({ x: birdX, y: s.birdY + birdRadius, timer: 0 });
+      } else if (!s.alive) resetGame();
+    }
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('click', onClick);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('click', onClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current!;
+    if (!canvas) return;
+    canvas.width = width;
+    canvas.height = height;
+
+    function spawnPipe() {
+      const s = stateRef.current;
+      const maxHeight = groundY - 40;
+      let h = 40 + (s.score % 10) * 40;
+      if (h > maxHeight) h = maxHeight;
+      s.pipes.push({ x: s.nextPipeX, height: h, passed: false });
+      s.nextPipeX += pipeSpacing;
+    }
+
+    function loop(t: number) {
+      if (!lastTimeRef.current) lastTimeRef.current = t;
+      const dt = Math.min(0.05, (t - lastTimeRef.current) / 1000);
+      lastTimeRef.current = t;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      const s = stateRef.current;
+
+      if (s.powerActive && !s.preparingJump) {
+        const speedFactor = Math.sin(s.powerPos * Math.PI) * 1.2 + 0.1;
+        s.powerPos += s.powerDir * dt * 0.8 * speedFactor;
+        if (s.powerPos >= 1) { s.powerPos = 1; s.powerDir = -1; }
+        else if (s.powerPos <= 0) { s.powerPos = 0; s.powerDir = 1; }
+      }
+
+      if (s.preparingJump) {
+        s.prepTime += dt;
+        s.eyeOffset = Math.sin(t * 50) * 3;
+        if (s.prepTime >= 0.25) jumpWithPower(s.powerPos);
+      } else {
+        s.eyeOffset = 0;
+      }
+
+      if (s.alive && s.pipes.length === 0) spawnPipe();
+
+      const pipeSpeed = (s.onGround || !s.alive) ? 0 : (240 + s.score * 6);
+      for (let i = s.pipes.length - 1; i >= 0; i--) {
+        s.pipes[i].x -= pipeSpeed * dt;
+        if (!s.pipes[i].passed && s.pipes[i].x + 48 < birdX - birdRadius) {
+          s.pipes[i].passed = true;
+          s.score += 1;
+          if (s.score > s.highScore) s.highScore = s.score;
+          setTick(t => t + 1);
+          if (s.pipes[i].x + pipeSpacing < width) spawnPipe();
+        }
+        if (s.pipes[i].x < -120) s.pipes.splice(i, 1);
+      }
+
+      if (!s.onGround && s.alive && !s.preparingJump) {
+        s.vy += s.gravity * dt;
+        s.birdY += s.vy * dt;
+        if (s.birdY >= groundY - birdRadius) {
+          s.birdY = groundY - birdRadius;
+          s.vy = 0;
+          s.onGround = true;
+          s.powerActive = true;
+        }
+      }
+
+      if (bgImgRef.current) ctx.drawImage(bgImgRef.current, 0, 0, width, height);
+
+      for (const pipe of s.pipes) {
+        const w = 56;
+        const h = pipe.height;
+        ctx.fillStyle = '#2f9e44';
+        ctx.fillRect(pipe.x, groundY - h, w, h);
+        ctx.fillStyle = '#1f6b2e';
+        ctx.fillRect(pipe.x + w - 14, groundY - h, 14, h);
+      }
+
+      if (birdImgRef.current) ctx.drawImage(birdImgRef.current, birdX - 18, s.birdY - 18, 42, 42);
+      if (eyeImgRef.current) ctx.drawImage(eyeImgRef.current, birdX + 2, s.birdY - 5 + s.eyeOffset, 36, 36);
+
+      for (const pipe of s.pipes) {
+        const w = 56;
+        const h = pipe.height;
+        const px = pipe.x, py = groundY - h;
+        const nearestX = Math.max(px, Math.min(birdX, px + w));
+        const nearestY = Math.max(py, Math.min(s.birdY, py + h));
+        const dx = birdX - nearestX;
+        const dy = s.birdY - nearestY;
+        if (dx * dx + dy * dy < birdRadius * birdRadius && s.alive) {
+          s.alive = false;
+          s.vy = 0;
+          s.onGround = false;
+          s.powerActive = false;
+          setTick(t => t + 1);
+        }
+      }
+
+      ctx.font = '28px Inter, system-ui, sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.fillText(`Score: ${s.score}`, 18, 34);
+      ctx.fillText(`High: ${s.highScore}`, 18, 64);
+
+      if (s.powerActive) {
+        const barW = 200;
+        const barH = 18;
+        const bx = width - barW - 24;
+        const by = height - 60;
+        ctx.fillStyle = 'rgba(255,255,255,0.12)';
+        ctx.fillRect(bx, by, barW, barH);
+        ctx.fillStyle = 'rgba(255,255,255,0.08)';
+        ctx.fillRect(bx + barW / 2 - 1, by - 6, 2, barH + 12);
+        const cx = bx + s.powerPos * barW;
+        const cy = by + barH / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#222';
+        ctx.stroke();
+
+        // Draw jump effects
+        for (let i = s.jumpEffects.length - 1; i >= 0; i--) {
+          const e = s.jumpEffects[i];
+          e.timer += dt;
+          const alpha = 1 - e.timer / 0.5;
+          if (alpha <= 0) {
+            s.jumpEffects.splice(i, 1);
+            continue;
+          }
+          if (sparkImgRef.current) {
+            ctx.globalAlpha = alpha;
+            ctx.drawImage(sparkImgRef.current, e.x-25, e.y - 8, 50, 50);
+            ctx.globalAlpha = 1;
+          }
+        }
+
+        ctx.font = '14px Inter, system-ui, sans-serif';
+        ctx.fillStyle = '#fff';
+        ctx.fillText('Click or press Space to jump — hit the center for max height', bx - 2, by - 12);
+      }
+
+      animRef.current = requestAnimationFrame(loop);
+    }
+
+    animRef.current = requestAnimationFrame(loop);
+
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+      lastTimeRef.current = null;
+    };
+  }, []);
+
   return (
-    <div
-      style={{
-        width: GAME_WIDTH,
-        height: GAME_HEIGHT,
-        backgroundColor: '#70c5ce',
-        position: 'relative',
-        overflow: 'hidden',
-        margin: '50px auto',
-        border: '2px solid black',
-        cursor: isGameOver ? 'pointer' : 'default',
-      }}
-    >
-      {/* Bird */}
-      <div
-        style={{
-          position: 'absolute',
-          left: 50,
-          top: birdY,
-          width: BIRD_SIZE,
-          height: BIRD_SIZE,
-          backgroundColor: 'yellow',
-          borderRadius: '50%',
-          transition: 'transform 0.1s', // For visual smoothness
-          transform: `rotate(${velocity * 1.5}deg)`, // Simple rotation based on velocity
-          zIndex: 10,
-        }}
-      />
-
-      {/* Pipes */}
-      {pipes.map(pipe => (
-        <Pipe
-          key={pipe.id}
-          x={pipe.x}
-          gapY={pipe.gapY}
-        />
-      ))}
-
-      {/* Score and Game Over */}
-      <div style={{ position: 'absolute', top: 10, left: 10, fontSize: '2em', color: 'white', textShadow: '2px 2px black', zIndex: 20 }}>
-        Score: {score}
-      </div>
-
-      {isGameOver && (
-        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, textAlign: 'center', backgroundColor: 'rgba(0,0,0,0.5)', color: 'white', padding: '20px', zIndex: 30 }}>
-          GAME OVER! Click to restart.
+    <div className='min-h-screen flex items-center justify-center bg-gradient-to-b from-sky-200 to-sky-100 p-6'>
+      <div className='w-[820px]'>
+        <h1 className='text-2xl font-bold mb-3'>Power Jump — Next.js Game</h1>
+        <p className='text-sm mb-4 text-gray-700'>Click or press Space to lock the power. Jump over pipes that grow from small to large very fast at regular intervals!</p>
+        <div className='rounded-lg shadow-lg overflow-hidden bg-white'>
+          <canvas ref={canvasRef} style={{ width: '100%', display: 'block' }} />
         </div>
-      )}
+        <div className='flex items-center justify-between mt-3 text-sm text-gray-600'>
+          <div>Click anywhere or press <span className='font-medium'>Space</span> to jump. Click/Space after death to restart.</div>
+          <div>Made with ❤️ — single-file demo</div>
+        </div>
+      </div>
     </div>
   );
 }
