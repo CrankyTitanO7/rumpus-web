@@ -169,7 +169,7 @@ export default function RumpusHomePage(){
 
 
           {/* ----------------- CARD 3: PAST ISSUES ----------------- */}
-          <article className="c-rumpus__item">
+          {/* <article className="c-rumpus__item">
 
             <div className="c-rumpus__item-figure c-rumpus__gradient-bottom"></div>
 
@@ -186,7 +186,7 @@ export default function RumpusHomePage(){
                 />
               </Link>
             </div>
-          </article>
+          </article> */}
 
 
 

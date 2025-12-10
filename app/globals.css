@@ -15,7 +15,7 @@
   }
 }
 
-body {
+html {
   margin: 0;
   background: #500a0a;
   background-image: url(../public/decal.png);
@@ -23,6 +23,9 @@ body {
   text-align: center;
   color: #000;
   scroll-behavior: smooth;
+  background-attachment: fixed;
+  background-position: center center;
+  background-size: cover;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -66,7 +69,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ----------------------------------------
-   TOP ISSUES LAYOUT  (RESTORED ORIGINAL FORMAT)
+   TOP ISSUES LAYOUT  
 ----------------------------------------- */
 
 .rumpus-top-issues {
@@ -147,10 +150,10 @@ section {
 }
 
 section:nth-of-type(odd) {
-  background-color: #0000006e;
+  background-color: #0000002d;
 }
 section:nth-of-type(even) {
-  background-color: #e2e2e231;
+  background-color: #e2e2e234;
 }
 
 /* ----------------------------------------
@@ -160,6 +163,20 @@ section:nth-of-type(even) {
 .c-rumpus {
   width: min(1200px, 95%);
   margin: 0 auto;
+
+  border-radius: 12px 12px 0 0;
+
+  /* Frosted glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Soft bevel edges */
+  box-shadow:
+    inset 2px 2px 6px rgba(255, 255, 255, 0.35),   /* light top-left highlight */
+    inset -2px -2px 6px rgba(0, 0, 0, 0.35),       /* dark bottom-right shade */
+    0 4px 10px rgba(0,0,0,0.3);                    /* outer drop shadow */
+  
+  /* overflow: hidden; */
 }
 
 .c-rumpus__list {
@@ -175,7 +192,7 @@ section:nth-of-type(even) {
   display: flex;
   flex-direction: column;
   border: 1px solid #202330;
-  background: #fff;
+  background: #ffffff6c;
   overflow: hidden;
   border-radius: 12px;
 }
@@ -184,15 +201,31 @@ section:nth-of-type(even) {
   view-timeline-name: --card;
   view-timeline-axis: block;
   animation-timeline: --card;
-  animation-name: card-shrink;
-  animation-range: entry 90% cover 50%;
+
+  /* run BOTH animations */
+  animation-name: card-shrink, card-fade;
+  animation-range: entry 50% exit 120%;
   animation-fill-mode: both;
 }
 
 /* Gradient block */
 .c-rumpus__item-figure {
   width: 100%;
-  height: 200px;
+  height: 0px;
+
+  border-radius: 12px 12px 0 0;
+
+  /* Frosted glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Soft bevel edges */
+  box-shadow:
+    inset 2px 2px 6px rgba(255, 255, 255, 0.35),   /* light top-left highlight */
+    inset -2px -2px 6px rgba(0, 0, 0, 0.35),       /* dark bottom-right shade */
+    0 4px 10px rgba(0,0,0,0.3);                    /* outer drop shadow */
+  
+  overflow: hidden;
 }
 
 /* Different gradients per card */
@@ -229,5 +262,16 @@ section:nth-of-type(even) {
   }
   100% {
     scale: 85%;
+  }
+}
+
+@keyframes card-fade {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(12px);
   }
 }

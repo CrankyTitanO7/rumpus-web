@@ -147,6 +147,16 @@ export default function Sidebar() {
           box-sizing: border-box;
           border-radius: 12px; /* smooth corners */
           overflow: hidden;    /* ensure rounded corners clip children */
+
+            /* Frosted glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* Soft bevel edges */
+  box-shadow:
+    inset 2px 2px 6px rgba(255, 255, 255, 0.35),   /* light top-left highlight */
+    inset -2px -2px 6px rgba(0, 0, 0, 0.35),       /* dark bottom-right shade */
+    0 4px 10px rgba(0,0,0,0.3);                    /* outer drop shadow */
         }
 
         .topbar ul {
