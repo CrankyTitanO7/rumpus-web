@@ -1,15 +1,11 @@
 @import "tailwindcss";
 
+/* ----------------------------------------
+   THEME + BASE STYLES
+----------------------------------------- */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,69 +16,28 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  scroll-behavior: smooth;
-  /* old background: black/red gradient */
-  /* background-image: linear-gradient(to bottom right, #721e1e, #230909);  */
-  background-color: #500a0a;
+  margin: 0;
+  background: #500a0a;
   background-image: url(../public/decal.png);
-  color: #000000;
-  text-align:center;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  color: #000;
+  scroll-behavior: smooth;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: bolder;
+  font-weight: bold;
 }
 
-#top {
-  align-items: center;
-}
-
-h1 {
-  font-size: 4em;
-  margin: 0.2em 0;
-}
-
-h2 {
-  font-size: 3em;
-  /* margin: .2em 0; */
-  margin: 0;
-}
-
-.navbar {
-  background-color: #333;
-  overflow: hidden;
-  /* position: fixed; */
-  bottom: 0;
-  width: 100%;
-}
-
-/* Style the links inside the navigation bar */
-.navbar a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
-}
-
-/* Change the color of links on hover */
-.navbar a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-/* layout for the countdown container and items */
+/* ----------------------------------------
+   COUNTDOWN SECTION
+----------------------------------------- */
 .rumpus-countdown {
   display: flex;
   gap: 0.6em;
   align-items: center;
   justify-content: center;
-  white-space: nowrap; /* keep everything on one line */
+  white-space: nowrap;
 }
 
 .countdown-item,
@@ -90,74 +45,189 @@ h2 {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  margin: 0 10px;
 }
 
 .countdown-value {
-  font-size: inherit; /* inherits the large font on the container */
-  line-height: 1;
+  font-size: inherit;
 }
 
 .countdown-label {
   font-size: 0.28em;
   font-weight: 700;
   margin-top: 0.06em;
-  opacity: 0.95;
+  opacity: 0.9;
 }
 
-/* Optional: clamp font size for very large/small screens */
-@media (min-width: 1200px){ .rumpus-countdown { font-size: 96px; } }
-@media (max-width: 400px){ .rumpus-countdown { font-size: 14vw; } }
+@media (min-width: 1200px) {
+  .rumpus-countdown { font-size: 96px; }
+}
+@media (max-width: 400px) {
+  .rumpus-countdown { font-size: 14vw; }
+}
 
+/* ----------------------------------------
+   TOP ISSUES LAYOUT  (RESTORED ORIGINAL FORMAT)
+----------------------------------------- */
 
+.rumpus-top-issues {
+  display: flex;
+  flex-direction: row;         /* <-- restores side-by-side layout */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;             /* responsive */
+  width: 100%;
+}
+
+/* LEFT COLUMN — 2 small iframes + text block */
+.rumpus-top-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 1 350px;             /* grow/shrink but stay narrower than right side */
+  max-width: 420px;
+}
+
+/* row inside left side: blurb + small iframe */
+.rumpus-top-row {
+  display: flex;
+  flex-direction: row;         /* blurb left, iframe right */
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* small text blurb */
+.rumpus-top-blurb {
+  max-width: 300px;
+  flex: 1 1 200px;
+  text-align: left;
+  margin: 0;
+}
+
+/* RIGHT COLUMN — 1 large iframe */
+.rumpus-top-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1 1 500px;             /* larger column */
+  max-width: 600px;
+}
+
+/* Make iframes always fit */
+.rumpus-top-left iframe,
+.rumpus-top-right iframe {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* ----------------------------------------
+   IFRAME BEVEL WRAP
+----------------------------------------- */
+.bevel-wrap {
+  display: block;
+  width: 100%;
+}
+
+.bevel-wrap iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ----------------------------------------
+   SECTION GENERAL
+----------------------------------------- */
 section {
   padding: 60px 20px;
   min-height: 100vh;
   box-sizing: border-box;
-  align-content: center;
-  text-align: center;
-}
-
-section h2 {
-  text-align: center;
-  font-size: 3em;
-  margin-bottom: 20px;
 }
 
 section:nth-of-type(odd) {
-  background-color: #000000;
+  background-color: #0000006e;
 }
 section:nth-of-type(even) {
-  background-color: #e2e2e2;
+  background-color: #e2e2e231;
 }
 
-aside {
-  position: fixed;
-  float: left;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 8px;
+/* ----------------------------------------
+   RUMPUS CARD SCROLLER
+----------------------------------------- */
+
+.c-rumpus {
+  width: min(1200px, 95%);
+  margin: 0 auto;
 }
 
-.bevel-wrap {
-  padding: 0;
-  display: inline-block;
-  /* box-shadow: inset 3px 3px 6px #00000000,
-              inset -3px -3px 6px #00000000; */
-  border-radius: 3px;
-}
-.bevel-wrap iframe {
-  display: block;
-  border: none;
+.c-rumpus__list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
-iframe {  
-  border: none;
-  border-radius: 12px;   /* adjust to taste */
-  overflow: hidden;      /* ensures the content follows the curve */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* subtle shadow for depth */
-  /* background-color: #500a0a;} */}
+/* -------- SINGLE COLUMN CARD -------- */
+.c-rumpus__item {
+  position: sticky;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #202330;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.c-rumpus__item:not(:last-child) {
+  view-timeline-name: --card;
+  view-timeline-axis: block;
+  animation-timeline: --card;
+  animation-name: card-shrink;
+  animation-range: entry 90% cover 50%;
+  animation-fill-mode: both;
+}
+
+/* Gradient block */
+.c-rumpus__item-figure {
+  width: 100%;
+  height: 200px;
+}
+
+/* Different gradients per card */
+.c-rumpus__gradient-top {
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.6));
+}
+.c-rumpus__gradient-mid {
+  background: linear-gradient(to bottom, rgba(255,255,255,.6), rgba(255,255,255,0));
+}
+.c-rumpus__gradient-bottom {
+  background: linear-gradient(to bottom, rgba(255,255,255,.5), rgba(255,255,255,.1));
+}
+
+/* Card body */
+.c-rumpus__item-info {
+  padding: 40px 20px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* FIX: no more vertical centering */
+}
+
+.c-rumpus__item-title {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+/* Animation */
+@keyframes card-shrink {
+  0%, 75% {
+    scale: 100%;
+  }
+  100% {
+    scale: 85%;
+  }
+}

@@ -79,102 +79,135 @@ export default function RumpusHomePage(){
 
 
 
-    {/* The main content area */}
-    <div id="content">
-        <div className="section" id="section1">
-            <div className="overcast-css -effect" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.58))', backgroundSize: 'cover', backgroundPosition: 'center'}}>
-                <h2 style= {{margin: 0 }}>COUNTDOWN TO LATEST ISSUE:</h2>
-                <div className="rumpus-countdown-wrap">
-                    <Countdown targetDate={new Date(endref.targetdate)} html={true} /> {/* Set your target date here */}
-                </div>
+    {/* ---- STACKED CARD SCROLLER ---- */}
+      <section className="c-rumpus">
+        <ul className="c-rumpus__list">
+
+          {/* ----------------- CARD 1: COUNTDOWN ----------------- */}
+          <article className="c-rumpus__item">
+
+            <div className="c-rumpus__item-figure c-rumpus__gradient-top"></div>
+
+            <div className="c-rumpus__item-info">
+              <h2 className="c-rumpus__item-title">COUNTDOWN TO LATEST ISSUE:</h2>
+
+              <div className="rumpus-countdown-wrap">
+                <Countdown targetDate={new Date(endref.targetdate)} html={true} />
+              </div>
             </div>
-        </div>
-        
-        <div className="section" id="section2" style={{backgroundImage: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.58),rgba(255, 255, 255, 0))', backgroundSize: 'cover', backgroundPosition: 'center'}}> 
-            <h2>our top issues:</h2>
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                {/* Left column: two stacked iframes */}
-                <div style={{ flex: '0 0 48%', display: 'flex', flexDirection: 'column', gap: '16px', marginRight: '16px', marginLeft: '16px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', gap: '16px', alignItems: 'flex-start' }}>
-                        <div style={{ flex: '0 0 60%', padding: '12px' }}>
-                            <h3 style={{ margin: 0 }}>Issue Highlight</h3>
-                            <p style={{ marginTop: '8px' }}>
-                                Short blurb about this issue — featured article, theme, or notable photos.
-                                Keep it concise so it sits neatly beside the upright viewer.
-                            </p>
-                            <p style={{ marginTop: '8px' }}>
-                                <a href={`${endref.issueurl}#p=${endref.pageref[0]}`} target="_blank" rel="noopener noreferrer">
-                                    Read the full issue
-                                </a>
-                            </p>
-                        </div>
-                        
-                        <div className="bevel-wrap" style={{ flex: '1 1 40%' }}>
-                            <iframe
-                            src={`${endref.issueurl}#p=${endref.pageref[0]}`}
-                            width="100%"
-                            height="290"
-                            style={{ border: 'none' }}
-                            title="Latest Issue - top"
-                            />
-                        </div>
+          </article>
+
+
+
+          {/* ----------------- CARD 2: TOP ISSUES ----------------- */}
+          <article className="c-rumpus__item">
+
+            <div className="c-rumpus__item-figure c-rumpus__gradient-mid"></div>
+
+            <div className="c-rumpus__item-info">
+              <h2 className="c-rumpus__item-title">our top issues:</h2>
+
+              <div className="rumpus-top-issues">
+
+                {/* LEFT COLUMN */}
+                <div className="rumpus-top-left">
+
+                  {/* Top left row */}
+                  <div className="rumpus-top-row">
+                    <div className="rumpus-top-blurb">
+                      <h3>Issue Highlight</h3>
+                      <p>
+                        Short blurb about this issue — featured article, theme, or notable photos.
+                      </p>
+
+                      <p>
+                        <a
+                          href={`${endref.issueurl}#p=${endref.pageref[0]}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Read the full issue
+                        </a>
+                      </p>
                     </div>
-                    
-                    <div className="bevel-wrap"> <iframe
-                        src={`${endref.issueurl}#p=${endref.pageref[2]}`}
-                        width="100%"
+
+                    {/* IFRAME 1 */}
+                    <div className="bevel-wrap">
+                      <iframe
+                        src={`${endref.issueurl}#p=${endref.pageref[0]}`}
                         height="290"
-                        style={{ border: 'none' }}
-                        title="Latest Issue - bottom"
-                        /></div>
-                    </div>
-                    
-                    {/* Right column: one large iframe */}
-                    <div className="bevel-wrap" style={{ flex: '0 0 48%' }}>
-                        <iframe
-                        src={`${endref.issueurl}#p=${endref.pageref[1]}`}
                         width="100%"
-                        height="600"
-                        style={{ border: 'none' }}
-                        title="Latest Issue - large"
-                        />
+                        style={{ border: "none" }}
+                      />
                     </div>
+                  </div>
+
+                  {/* IFRAME 3 */}
+                  <div className="bevel-wrap">
+                    <iframe
+                      src={`${endref.issueurl}#p=${endref.pageref[2]}`}
+                      height="290"
+                      width="100%"
+                      style={{ border: "none" }}
+                    />
+                  </div>
                 </div>
+
+                {/* RIGHT COLUMN IFRAME */}
+                <div className="rumpus-top-right bevel-wrap">
+                  <iframe
+                    src={`${endref.issueurl}#p=${endref.pageref[1]}`}
+                    height="600"
+                    width="100%"
+                    style={{ border: "none" }}
+                  />
+                </div>
+              </div>
             </div>
-            
-            <div className="section" id="section3">
-                <h2>PAST ISSUES:</h2>
-                {/* NOTE: Replace 'archive.html' with the Next.js Link component route for production */}
-                <Link href="/past-issues">
-                    {/* Replace <img> with Next.js <Image> for optimization in a real app */}
-                        <Image 
-                        src="/past_issues.png" 
-                        alt="Link to Past Issues" 
-                        width="300" 
-                        height="400"
-                        />
-                    </Link>
-                </div>
-                
-                <div className="section" id="section4">
-                    <h1>G A M E S</h1>
-                    <main>
-                        {/* <h1 style={{ textAlign: 'center' }}>Flappy Bird in Next.js/React</h1> */}
-                        {/* 3. Render the client wrapper component */}
-                        <DynamicGameWrapper />
-                    </main>
-                </div>
+          </article>
+
+
+
+          {/* ----------------- CARD 3: PAST ISSUES ----------------- */}
+          <article className="c-rumpus__item">
+
+            <div className="c-rumpus__item-figure c-rumpus__gradient-bottom"></div>
+
+            <div className="c-rumpus__item-info">
+              <h2 className="c-rumpus__item-title">PAST ISSUES:</h2>
+
+              <Link href="/past-issues" style={{ display: 'block', textAlign: 'center' }}>
+                <Image
+                  src="/past_issues.png"
+                  alt="Link to Past Issues"
+                  width={300}
+                  height={400}
+                  style={{ margin: '0 auto' }}
+                />
+              </Link>
             </div>
-            
-            {/* The fixed navigation bar
-                <div className="navbar">
-                    <a href="#top">top of page</a>
-                    <a href="#news">News</a>
-                    <a href="#contact">Contact</a>
-                </div> */}
-                </>
-            );
-  }
+          </article>
+
+
+
+          {/* ----------------- CARD 4: GAMES ----------------- */}
+          <article className="c-rumpus__item">
+
+            <div className="c-rumpus__item-figure c-rumpus__gradient-bottom"></div>
+
+            <div className="c-rumpus__item-info">
+              <h1 className="c-rumpus__item-title">G A M E S</h1>
+
+              <main style={{ margin: '0 auto' }}>
+                <DynamicGameWrapper />
+              </main>
+            </div>
+          </article>
+        </ul>
+      </section>
+    </>
+  );
+}
   
   
   // default landing page (auto generated)
