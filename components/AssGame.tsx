@@ -5,7 +5,7 @@ export default function Game() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [age, setAge] = useState(0);
   const ageRef = useRef(0);
-  const [ageRank, setageRank] = useRef(0);
+  const [ageRank, setAgeRank] = useState("");
   const [gameOver, setGameOver] = useState(false);
 
   const xRef = useRef(150);
@@ -27,19 +27,19 @@ export default function Game() {
       ageRef.current = next;
       return next;
     });
-    setAgeRank((a) => {
+    setAgeRank(() => {
       let rank = "none";
       if (ageRef.current <= 5) rank = "diddy 👶";
       else if (ageRef.current <= 12) rank = "diddy 👶👶";
       else if (ageRef.current <= 16) rank = "still diddy 👶👶👶";
       else if (ageRef.current <= 18) rank = "frosh 🧒";
       else if (ageRef.current <= 19) rank = "sophomore 🧒";
-      else if (ageRef.current <= 20) rank = "junior 🧒"
+      else if (ageRef.current <= 20) rank = "junior 🧒";
       else if (ageRef.current <= 21) rank = "senior 🧒";
       else if (ageRef.current <= 25) rank = "grad student";
       else if (ageRef.current <= 55) rank = "prof 💀";
       else if (ageRef.current <= 65) rank = "senior prof 💀";
-      else rank = "Elderly";
+      else rank = "ultra tenured prof 💀💀💀";
       return rank;
     });
   };
@@ -62,17 +62,19 @@ export default function Game() {
       bouncedRef.current = false;
       ageRef.current = 0;
       setAge(0);
+      setAgeRank("");
       setGameOver(false);
       gameOverRef.current = false;
+      setBigRadiusMultiplier(1);
     }
 
     function tick() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.font = "22px sans-serif";
-      ctx.fillStyle = "white";
-      ctx.fillText(`age: ${ageRef.current}`, 20, 40);
-      ctx.fillText(agerank, 20, 40);
+      ctx.fillStyle = "black";
+      ctx.fillText(`age: ${ageRef.current}  |  rank: ${ageRank ?? "-"}`, 20, 40);
+      ctx.fillText(ageRank, 20, 70);
 
       if (!gameOverRef.current) {
         xRef.current += vxRef.current;
@@ -136,15 +138,24 @@ export default function Game() {
             let rvx = vx - 2 * dot * nx;
             let rvy = vy - 2 * dot * ny;
 
-            const restitution = 1.00000000001;
-            rvx *= restitution;
-            rvy *= restitution;
+            const restitution = 0.15;
+            rvx += restitution;
+            rvy += restitution;
 
             vxRef.current = rvx;
             vyRef.current = rvy;
 
-            setBigRadiusMultiplier(1.3);
-            setTimeout(() => setBigRadiusMultiplier(1), 100);
+            const start = performance.now();
+            function animateGrow(time: number) {
+              const elapsed = time - start;
+              if (elapsed < 100) {
+                setBigRadiusMultiplier(1.05 - 0.05 * (elapsed / 100));
+                requestAnimationFrame(animateGrow);
+              } else {
+                setBigRadiusMultiplier(1);
+              }
+            }
+            requestAnimationFrame(animateGrow);
 
             const overlap = bigRadius + circleRadius - dist;
             if (overlap > 0) {
@@ -168,20 +179,18 @@ export default function Game() {
         ctx.font = "22px sans-serif";
         ctx.fillStyle = "black";
         ctx.fillText(`age: ${ageRef.current}`, 110, 200);
+        ctx.fillText(ageRank, 110, 230);
 
         ctx.font = "20px sans-serif";
-        ctx.fillText("click to play again", 120, 240);
+        ctx.fillText("click to play again", 120, 260);
       }
 
       rafId = requestAnimationFrame(tick);
     }
 
     const handleClick = () => {
-      if (gameOverRef.current) {
-        reset();
-      } else {
-        fallingRef.current = true;
-      }
+      if (gameOverRef.current) reset();
+      else fallingRef.current = true;
     };
 
     canvas.addEventListener("click", handleClick);
@@ -191,7 +200,7 @@ export default function Game() {
       canvas.removeEventListener("click", handleClick);
       cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [ageRank]);
 
   return (
     <div className="flex justify-center mt-10">
