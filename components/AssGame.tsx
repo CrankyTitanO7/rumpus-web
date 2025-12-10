@@ -5,6 +5,7 @@ export default function Game() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [age, setAge] = useState(0);
   const ageRef = useRef(0);
+  const [ageRank, setageRank] = useRef(0);
   const [gameOver, setGameOver] = useState(false);
 
   const xRef = useRef(150);
@@ -25,6 +26,21 @@ export default function Game() {
       const next = a + 1;
       ageRef.current = next;
       return next;
+    });
+    setAgeRank((a) => {
+      let rank = "none";
+      if (ageRef.current <= 5) rank = "diddy 👶";
+      else if (ageRef.current <= 12) rank = "diddy 👶👶";
+      else if (ageRef.current <= 16) rank = "still diddy 👶👶👶";
+      else if (ageRef.current <= 18) rank = "frosh 🧒";
+      else if (ageRef.current <= 19) rank = "sophomore 🧒";
+      else if (ageRef.current <= 20) rank = "junior 🧒"
+      else if (ageRef.current <= 21) rank = "senior 🧒";
+      else if (ageRef.current <= 25) rank = "grad student";
+      else if (ageRef.current <= 55) rank = "prof 💀";
+      else if (ageRef.current <= 65) rank = "senior prof 💀";
+      else rank = "Elderly";
+      return rank;
     });
   };
 
@@ -54,8 +70,9 @@ export default function Game() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.font = "22px sans-serif";
-      ctx.fillStyle = "black";
+      ctx.fillStyle = "white";
       ctx.fillText(`age: ${ageRef.current}`, 20, 40);
+      ctx.fillText(agerank, 20, 40);
 
       if (!gameOverRef.current) {
         xRef.current += vxRef.current;
