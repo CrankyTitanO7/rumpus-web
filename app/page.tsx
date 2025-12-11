@@ -84,7 +84,7 @@ export default function RumpusHomePage(){
         <ul className="c-rumpus__list">
 
           {/* ----------------- CARD 1: COUNTDOWN ----------------- */}
-          <article className="c-rumpus__item">
+          <article className="c-rumpus__item"  id="section1">
 
             <div className="c-rumpus__item-figure c-rumpus__gradient-top"></div>
 
@@ -100,7 +100,7 @@ export default function RumpusHomePage(){
 
 
           {/* ----------------- CARD 2: TOP ISSUES ----------------- */}
-          <article className="c-rumpus__item">
+          <article className="c-rumpus__item" id="section2">
 
             <div className="c-rumpus__item-figure c-rumpus__gradient-mid"></div>
 
@@ -191,7 +191,7 @@ export default function RumpusHomePage(){
 
 
           {/* ----------------- CARD 4: GAMES ----------------- */}
-          <article className="c-rumpus__item">
+          <article className="c-rumpus__item" id="section4">
 
             <div className="c-rumpus__item-figure c-rumpus__gradient-bottom"></div>
 

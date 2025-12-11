@@ -118,9 +118,9 @@ export default function Sidebar() {
               <li>
                 <a href="#section2" onClick={(e) => handleNav(e, '#section2')}>Latest Issue</a>
               </li>
-              <li>
+              {/* <li>
                 <a href="#section3" onClick={(e) => handleNav(e, '#section3')}>Past Issues</a>
-              </li>
+              </li> */}
               <li>
                 <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
               </li>
