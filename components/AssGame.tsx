@@ -226,6 +226,9 @@ export default function Game() {
           style={{ border: "1px solid #aaa", borderRadius: 8 }}
         />
       </div>
+      <div className='flex items-center justify-between mt-3 text-sm text-gray-600'>
+          <div>made with 🍑</div>
+        </div>
     </>
   );
 }
