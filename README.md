@@ -20,7 +20,6 @@ Note that rumpus isn't affiliated with Yale University the institution and that 
 
 This website was developed with nextjs with the intention of launching on vercel. To be specific:
 
-> [!quote]
 > This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 
@@ -28,7 +27,6 @@ This website was developed with nextjs with the intention of launching on vercel
 
 from the nextjs readme and documents:
 
-> [!quote]
 >The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 >
 >Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details. 
@@ -64,7 +62,6 @@ then open [http://localhost:3000](http://localhost:3000) with your browser to se
 
 again, a lot of this was taken from the README.md.old file, but you can read the documentation listed below:
 
-> [!quote]
 >To learn more about Next.js, take a look at the following resources:
 >
 >- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
