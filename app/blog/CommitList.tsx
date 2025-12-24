@@ -60,10 +60,12 @@ export default function CommitList({ initialCommits }: { initialCommits: any[] }
             listStyle: 'none', 
             border: '1px solid #d0d7de', 
             borderRadius: '6px',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            background: '#66666694',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
           }}>
             {/* Header / Subject */}
-            <div style={{ padding: '12px', backgroundColor: '#f6f8fa9a', borderBottom: '1px solid #d0d7de' }}>
+            <div style={{ padding: '12px', backgroundColor: '#ffffff73', borderBottom: '1px solid #d0d7de' }}>
               <div style={{ fontWeight: '600', color: '#1f2328' }}>{subject}</div>
             </div>
 

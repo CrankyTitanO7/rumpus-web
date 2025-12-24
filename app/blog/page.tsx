@@ -1,12 +1,12 @@
 import { fetchCommits } from "./actions";
 import CommitList from "./CommitList"; // looks like an error but DON'T TOUCH IT it works fine. 
-// import "./blogstyle.css";
+import "./blogstyle.css";
 
 export default async function Page() {
   const initialCommits = await fetchCommits(1);
 
   return (
-    <main style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+    <main style={{ maxWidth: '800px', margin: '0 auto', padding: '20px'}}>
         <h1 style={{ color: '#000000ff', fontSize: '32px', borderTop: '1px solid #d0d7de' }}>blog</h1>    
         <p style={{ color: '#999999ff', fontSize: '15px'}}>Hello, and welcome to our blog! We are excited to share our latest updates and insights with you. We will try to updates
         you with new content on a regular basis, so please check back often to see what's new. We hope you enjoy reading our blog and find it informative and engaging.</p>
