@@ -1,8 +1,6 @@
-// import Image from "next/image";
-import { reverseTimer } from "@/lib/reverseTimer";
+// large page viewer
 import "../globals.css";
-
-// global variables for easy reference
+import { reverseTimer } from "@/lib/reverseTimer";
 
 // current issue info
 const reference = {
@@ -29,13 +27,15 @@ const endref = {
     targetdate: reference.targetdate,                                                       // target date for countdown timer
 }
 
-export default function AboutPage() {
+export default function reader() {
     return (
-        <div>
-            <h1>About</h1>
-            <p>All about the single best asses on campus</p>
-            <h2>List of All our Asses:</h2>
-            
+        <div className="bevel-wrap">
+            <iframe
+                src={`${endref.issueurl}#p=${endref.pageref[0]}`}
+                height="1000px"
+                width="1000px"
+                style={{ border: "none" }}
+            />
         </div>
     );
 }

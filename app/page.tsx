@@ -116,8 +116,10 @@ export default function RumpusHomePage(){
                   <div className="rumpus-top-row">
                     <div className="rumpus-top-blurb">
                       <h3>Issue Highlight</h3>
+                      <h4><a href="/reader">click here for large page viewer!</a></h4>
                       <p>
                         Short blurb about this issue — featured article, theme, or notable photos.
+                        
                       </p>
 
                       <p>
