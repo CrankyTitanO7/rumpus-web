@@ -91,7 +91,7 @@ export default function Sidebar() {
               <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
             </li>
             <li>
-              <Link href="/about">About</Link>
+              <Link href="/about">About/Contact</Link>
             </li>
             <li>
               <Link href="/blog">Blog</Link>
@@ -128,7 +128,7 @@ export default function Sidebar() {
                 <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
               </li>
               <li>
-                <Link href="/about">About</Link>
+                <Link href="/about">About/Contact</Link>
               </li>
               <li>
                 <Link href="/blog">Blog</Link>
