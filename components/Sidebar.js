@@ -104,8 +104,7 @@ export default function Sidebar() {
                     </li>
                     <li>
                         <a
-                            href="#section3"
-                            onClick={(e) => handleNav(e, "#section3")}
+                            href="/archive"
                         >
                             Past Issues
                         </a>

@@ -135,21 +135,32 @@ export default async function Page() {
                     >
                         Official Blog Notes
                     </h2>
+                    <div id="blog-content">
+                        <div className="blog-casing">
+                            <h3 className="blog-title">Blog 12/30/25</h3>
+                            <br />
+                            <p className="blog">
+                                Well-cum to my awesome blog.
+                                <br />- Jaden Lee, class of 2029
+                            </p>
+                        </div>
 
-                    <div className="blog-casing">
-                        <h3 className="blog-title">Blog 12/24/25</h3>
-                        <br />
-                        <p className="blog">
-                            Merry Christmas! We are excited to announce the
-                            launch of our new website for the Yale Rumpus. Our
-                            team has been working hard to create a platform that
-                            showcases our passion and drive and dedication to
-                            the bit. we will keep working on this project and
-                            keep you updated with new features and content.
-                            Thank you for your support, and we look forward to
-                            sharing our journey with you!
-                            <br />- Jaden Lee, class of 2029
-                        </p>
+                        <div className="blog-casing">
+                            <h3 className="blog-title">Blog 12/24/25</h3>
+                            <br />
+                            <p className="blog">
+                                Merry Christmas! We are excited to announce the
+                                launch of our new website for the Yale Rumpus.
+                                Our team has been working hard to create a
+                                platform that showcases our passion and drive
+                                and dedication to the bit. we will keep working
+                                on this project and keep you updated with new
+                                features and content. Thank you for your
+                                support, and we look forward to sharing our
+                                journey with you!
+                                <br />- Jaden Lee, class of 2029
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div
