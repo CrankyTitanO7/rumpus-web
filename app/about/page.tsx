@@ -34,7 +34,9 @@ export default function AboutPage() {
                 </div>
 
                 <div id="head">
-                  <h2><a href="/">return Home</a></h2>
+                    <h2>
+                        <a href="/">return Home</a>
+                    </h2>
                 </div>
 
                 <div
