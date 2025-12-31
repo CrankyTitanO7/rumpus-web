@@ -1,67 +1,73 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
-  const [headerVisible, setHeaderVisible] = useState(true);
-  const headerRef = useRef(null);
+    const [open, setOpen] = useState(false);
+    const [headerVisible, setHeaderVisible] = useState(true);
+    const headerRef = useRef(null);
 
-  // Intersection Observer to detect if header is visible
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setHeaderVisible(entry.isIntersecting);
-      },
-      { threshold: 0 }
-    );
+    // Intersection Observer to detect if header is visible
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setHeaderVisible(entry.isIntersecting);
+            },
+            { threshold: 0 }
+        );
 
-    // Get the header element (id="top")
-    const headerEl = document.querySelector('#top');
-    if (headerEl) {
-      observer.observe(headerEl);
-    }
+        // Get the header element (id="top")
+        const headerEl = document.querySelector("#top");
+        if (headerEl) {
+            observer.observe(headerEl);
+        }
 
-    return () => {
-      if (headerEl) observer.unobserve(headerEl);
+        return () => {
+            if (headerEl) observer.unobserve(headerEl);
+        };
+    }, []);
+
+    // Smooth-scroll navigation handler
+    const handleNav = (e, hash) => {
+        e.preventDefault();
+        const el = document.querySelector(hash);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        setOpen(false);
     };
-  }, []);
 
-  // Smooth-scroll navigation handler
-  const handleNav = (e, hash) => {
-    e.preventDefault();
-    const el = document.querySelector(hash);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    setOpen(false);
-  };
+    return (
+        <>
+            {/* Top bar (visible when header is visible) */}
+            <nav className="topbar">
+                {(() => {
+                    const headlines = [
+                        "what the FUCK is a CRIMSON?!?!?",
+                        "suck my YICK",
+                        "the curse of KAO",
+                        "THE GAME is just a formality",
+                        "damn Harvard, no funding?",
+                    ];
 
-  return (
-    <>
-      {/* Top bar (visible when header is visible) */}
-      <nav className="topbar">
-        {(() => {
-          const headlines = [
-            "what the FUCK is a CRIMSON?!?!?",
-            "suck my YICK",
-            "the curse of KAO",
-            "THE GAME is just a formality",
-            "damn Harvard, no funding?"
-          ];
+                    return (
+                        <div
+                            className="scrolling-headlines"
+                            aria-label="Latest headlines"
+                            role="region"
+                        >
+                            <div className="ticker">
+                                <div className="ticker-track">
+                                    {headlines.concat(headlines).map((h, i) => (
+                                        <span className="ticker-item" key={i}>
+                                            {h}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
 
-          return (
-            <div className="scrolling-headlines" aria-label="Latest headlines" role="region">
-              <div className="ticker">
-                <div className="ticker-track">
-                  {headlines.concat(headlines).map((h, i) => (
-                    <span className="ticker-item" key={i}>{h}</span>
-                  ))}
-                </div>
-              </div>
-
-              <style>{`
+                            <style>{`
                 .scrolling-headlines { width: 100%; overflow: hidden; box-sizing: border-box; }
                 .ticker { display: block; width: 100%; overflow: hidden; }
                 .ticker-track { display: inline-flex; gap: 48px; white-space: nowrap; animation: ticker-scroll 18s linear infinite; }
@@ -71,74 +77,119 @@ export default function Sidebar() {
                 /* Pause on hover */
                 // .scrolling-headlines:hover .ticker-track { animation-play-state: paused; }
               `}</style>
-            </div>
-          );
-        })()}
-          <ul>
-            <li>
-              <a href="#top" onClick={(e) => handleNav(e, '#top')}>top of page</a>
-            </li>
-            <li>
-              <a href="#section1" onClick={(e) => handleNav(e, '#section1')}>Countdown</a>
-            </li>
-            <li>
-              <a href="#section2" onClick={(e) => handleNav(e, '#section2')}>Latest Issue</a>
-            </li>
-            <li>
-              <a href="#section3" onClick={(e) => handleNav(e, '#section3')}>Past Issues</a>
-            </li>
-            <li>
-              <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
-            </li>
-            <li>
-              <Link href="/about">About</Link>
-            </li>
-            <li>
-              <Link href="/blog">Blog</Link>
-            </li>
-          </ul>
-        </nav>
+                        </div>
+                    );
+                })()}
+                <ul>
+                    <li>
+                        <a href="#top" onClick={(e) => handleNav(e, "#top")}>
+                            top of page
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#section1"
+                            onClick={(e) => handleNav(e, "#section1")}
+                        >
+                            Countdown
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#section2"
+                            onClick={(e) => handleNav(e, "#section2")}
+                        >
+                            Latest Issue
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="/archive"
+                        >
+                            Past Issues
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#section4"
+                            onClick={(e) => handleNav(e, "#section4")}
+                        >
+                            Games
+                        </a>
+                    </li>
+                    <li>
+                        <Link href="/about">About/Contact</Link>
+                    </li>
+                    <li>
+                        <Link href="/blog">Blog</Link>
+                    </li>
+                </ul>
+            </nav>
 
-      {/* Side sidebar (visible when header is NOT visible) */}
-      {!headerVisible && (
-        <div
-          className="sidebar-wrapper"
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
-        >
-          <button className="sidebar-handle" aria-label="Open sidebar" style={{ top: '10px' }}>
-            ☰
-          </button>
+            {/* Side sidebar (visible when header is NOT visible) */}
+            {!headerVisible && (
+                <div
+                    className="sidebar-wrapper"
+                    onMouseEnter={() => setOpen(true)}
+                    onMouseLeave={() => setOpen(false)}
+                >
+                    <button
+                        className="sidebar-handle"
+                        aria-label="Open sidebar"
+                        style={{ top: "10px" }}
+                    >
+                        ☰
+                    </button>
 
-          <aside className={`sidebar ${open ? "open" : ""}`}>
-            <ul>
-              <li>
-                <a href="#top" onClick={(e) => handleNav(e, '#top')}>top of page</a>
-              </li>
-              <li>
-                <a href="#section1" onClick={(e) => handleNav(e, '#top')}>Countdown</a>
-              </li>
-              <li>
-                <a href="#section2" onClick={(e) => handleNav(e, '#section2')}>Latest Issue</a>
-              </li>
-              {/* <li>
+                    <aside className={`sidebar ${open ? "open" : ""}`}>
+                        <ul>
+                            <li>
+                                <a
+                                    href="#top"
+                                    onClick={(e) => handleNav(e, "#top")}
+                                >
+                                    top of page
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#section1"
+                                    onClick={(e) => handleNav(e, "#top")}
+                                >
+                                    Countdown
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#section2"
+                                    onClick={(e) => handleNav(e, "#section2")}
+                                >
+                                    Latest Issue
+                                </a>
+                            </li>
+                            {/* <li>
                 <a href="#section3" onClick={(e) => handleNav(e, '#section3')}>Past Issues</a>
               </li> */}
-              <li>
-                <a href="#section4" onClick={(e) => handleNav(e, '#section4')}>Games</a>
-              </li>
-              <li>
-                <Link href="/about">About</Link>
-              </li>
-              <li>
-                <Link href="/blog">Blog</Link>
-              </li>
-            </ul>
-          </aside>
-        </div>
-      )}
+                            <li>
+                                <a
+                                    href="#section4"
+                                    onClick={(e) => handleNav(e, "#section4")}
+                                >
+                                    Games
+                                </a>
+                            </li>
+                            <li>
+                                <Link href="/about">About/Contact</Link>
+                            </li>
+                            <li>
+                                <Link href="/blog">Blog</Link>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            )}
 
-      <style>{`
+            <style>{`
         /* Top bar styles */
         .topbar {
           // position: fixed;
@@ -254,6 +305,6 @@ export default function Sidebar() {
           text-decoration: none;
         }
       `}</style>
-    </>
-  );
+        </>
+    );
 }

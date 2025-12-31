@@ -1,47 +1,50 @@
 html {
-  background-image: url("../../public/blog-bg.png");
+    background-image: url("../../public/blog-bg.png");
     /* custom font things */
-font-family: "Inter", monospace;
-font-style: normal;
-font-weight: 400;
+    font-family: monospace;
+    font-style: normal;
+    font-weight: 400;
+    color: white;
 }
 
 aside {
-  width: 300px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #070c1838;
-  color: #ffffff71;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%;
-  z-index: 1000;
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #070c1838;
+    color: #ffffff71;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
 
-  /* Smooth Transition */
-  transition: all 0.3s ease-in-out;
+    /* Smooth Transition */
+    transition: all 0.3s ease-in-out;
 
-  /* Blur effect when not hovered */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px); /* For Safari support */
+    /* Blur effect when not hovered */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); /* For Safari support */
 }
 
 aside:hover {
-  background-color: #070c18;
-  color: #ffffff;
-  
-  /* Remove or reduce blur on hover for clarity */
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+    background-color: #070c18;
+    color: #ffffff;
+
+    /* Remove or reduce blur on hover for clarity */
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
 }
 
 a {
-  color: #064ed3;
-  text-decoration: underline;
+    color: #064ed3;
+    text-decoration: underline;
 }
 
+h1,
+h2,
 h3 {
-  color: #ffffff;
+    color: #ffffff;
 }

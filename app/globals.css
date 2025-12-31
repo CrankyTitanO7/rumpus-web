@@ -4,73 +4,87 @@
    THEME + BASE STYLES
 ----------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
 }
 
 html {
-  margin: 0;
-  background: #500a0a;
-  background-image: url(../public/decal.png);
-  /* font-family: Arial, Helvetica, sans-serif; */
-  text-align: center;
-  color: #000;
-  scroll-behavior: smooth;
-  background-attachment: fixed;
-  background-position: center center;
-  background-size: cover;
+    margin: 0;
+    background: #500a0a;
+    background-image: url(../public/decal.png);
+    /* font-family: Arial, Helvetica, sans-serif; */
+    text-align: center;
+    color: var(--background);
+    scroll-behavior: smooth;
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
 
-  /* custom font things */
-font-family: Palatino;
-font-style: normal;
-font-weight: 400;
+    /* custom font things */
+    font-family: Palatino;
+    font-style: normal;
+    font-weight: 400;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: bold;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+}
+
+a {
+    color: lightblue;
+    text-decoration: underline;
 }
 
 /* ----------------------------------------
    COUNTDOWN SECTION
 ----------------------------------------- */
 .rumpus-countdown {
-  display: flex;
-  gap: 0.6em;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
+    display: flex;
+    gap: 0.6em;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .countdown-item,
 .countdown-item-final {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .countdown-value {
-  font-size: inherit;
+    font-size: inherit;
 }
 
 .countdown-label {
-  font-size: 0.28em;
-  font-weight: 700;
-  margin-top: 0.06em;
-  opacity: 0.9;
+    font-size: 0.28em;
+    font-weight: 700;
+    margin-top: 0.06em;
+    opacity: 0.9;
 }
 
 @media (min-width: 1200px) {
-  .rumpus-countdown { font-size: 96px; }
+    .rumpus-countdown {
+        font-size: 96px;
+    }
 }
 @media (max-width: 400px) {
-  .rumpus-countdown { font-size: 14vw; }
+    .rumpus-countdown {
+        font-size: 14vw;
+    }
 }
 
 /* ----------------------------------------
@@ -78,87 +92,87 @@ h1, h2, h3, h4, h5, h6 {
 ----------------------------------------- */
 
 .rumpus-top-issues {
-  display: flex;
-  flex-direction: row;         /* <-- restores side-by-side layout */
-  justify-content: center;
-  align-items: flex-start;
-  gap: 20px;
-  flex-wrap: wrap;             /* responsive */
-  width: 100%;
+    display: flex;
+    flex-direction: row; /* <-- restores side-by-side layout */
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap; /* responsive */
+    width: 100%;
 }
 
 /* LEFT COLUMN — 2 small iframes + text block */
 .rumpus-top-left {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1 1 350px;             /* grow/shrink but stay narrower than right side */
-  max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1 1 350px; /* grow/shrink but stay narrower than right side */
+    max-width: 420px;
 }
 
 /* row inside left side: blurb + small iframe */
 .rumpus-top-row {
-  display: flex;
-  flex-direction: row;         /* blurb left, iframe right */
-  gap: 20px;
-  flex-wrap: wrap;
-  align-items: flex-start;
+    display: flex;
+    flex-direction: row; /* blurb left, iframe right */
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
 /* small text blurb */
 .rumpus-top-blurb {
-  max-width: 300px;
-  flex: 1 1 200px;
-  text-align: left;
-  margin: 0;
+    max-width: 300px;
+    flex: 1 1 200px;
+    text-align: left;
+    margin: 0;
 }
 
 /* RIGHT COLUMN — 1 large iframe */
 .rumpus-top-right {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1 1 500px;             /* larger column */
-  max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1 1 500px; /* larger column */
+    max-width: 600px;
 }
 
 /* Make iframes always fit */
 .rumpus-top-left iframe,
 .rumpus-top-right iframe {
-  width: 100%;
-  border-radius: 12px;
+    width: 100%;
+    border-radius: 12px;
 }
 
 /* ----------------------------------------
    IFRAME BEVEL WRAP
 ----------------------------------------- */
 .bevel-wrap {
-  display: block;
-  width: 100%;
+    display: block;
+    width: 100%;
 }
 
 .bevel-wrap iframe {
-  display: block;
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* ----------------------------------------
    SECTION GENERAL
 ----------------------------------------- */
 section {
-  padding: 60px 20px;
-  min-height: 100vh;
-  box-sizing: border-box;
+    padding: 60px 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
 section:nth-of-type(odd) {
-  background-color: #0000002d;
+    background-color: #0000002d;
 }
 section:nth-of-type(even) {
-  background-color: #e2e2e234;
+    background-color: #e2e2e234;
 }
 
 /* ----------------------------------------
@@ -166,130 +180,140 @@ section:nth-of-type(even) {
 ----------------------------------------- */
 
 .c-rumpus {
-  width: min(1200px, 95%);
-  margin: 0 auto;
+    width: min(1200px, 95%);
+    margin: 0 auto;
 
-  border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0;
 
-  /* Frosted glass */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+    /* Frosted glass */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-  /* Soft bevel edges */
-  box-shadow:
-    inset 2px 2px 6px rgba(255, 255, 255, 0.35),   /* light top-left highlight */
-    inset -2px -2px 6px rgba(0, 0, 0, 0.35),       /* dark bottom-right shade */
-    0 4px 10px rgba(0,0,0,0.3);                    /* outer drop shadow */
-  
-  /* overflow: hidden; */
+    /* Soft bevel edges */
+    box-shadow: inset 2px 2px 6px rgba(255, 255, 255, 0.35),
+        /* light top-left highlight */ inset -2px -2px 6px rgba(0, 0, 0, 0.35),
+        /* dark bottom-right shade */ 0 4px 10px rgba(0, 0, 0, 0.3); /* outer drop shadow */
+
+    /* overflow: hidden; */
 }
 
 .c-rumpus__list {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 
 /* -------- SINGLE COLUMN CARD -------- */
 .c-rumpus__item {
-  position: sticky;
-  top: 50px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #202330;
-  background: #ffffff6c;
-  overflow: hidden;
-  border-radius: 12px;
+    position: sticky;
+    top: 50px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #202330;
+    background: #ffffff6c;
+    overflow: hidden;
+    border-radius: 12px;
 }
-
 
 /* first child animation */
 .c-rumpus__item:first-child {
     view-timeline-name: --card;
-  view-timeline-axis: block;
-  animation-timeline: --card;
+    view-timeline-axis: block;
+    animation-timeline: --card;
 
-  /* run BOTH animations */
-  animation-name: card-shrink, card-fade;
-  animation-range: entry 100% exit 120%;
-  animation-fill-mode: both;
+    /* run BOTH animations */
+    animation-name: card-shrink, card-fade;
+    animation-range: entry 100% exit 120%;
+    animation-fill-mode: both;
 }
 
 .c-rumpus__item:not(:first-child):not(:last-child) {
-  view-timeline-name: --card;
-  view-timeline-axis: block;
-  animation-timeline: --card;
+    view-timeline-name: --card;
+    view-timeline-axis: block;
+    animation-timeline: --card;
 
-  /* run BOTH animations */
-  animation-name: card-shrink, card-fade;
-  animation-range: entry 50% exit 120%;
-  animation-fill-mode: both;
+    /* run BOTH animations */
+    animation-name: card-shrink, card-fade;
+    animation-range: entry 50% exit 120%;
+    animation-fill-mode: both;
 }
 
 /* Gradient block */
 .c-rumpus__item-figure {
-  width: 100%;
-  height: 0px;
+    width: 100%;
+    height: 0px;
 
-  border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0;
 
-  /* Frosted glass */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+    /* Frosted glass */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 
-  /* Soft bevel edges */
-  box-shadow:
-    inset 2px 2px 6px rgba(255, 255, 255, 0.35),   /* light top-left highlight */
-    inset -2px -2px 6px rgba(0, 0, 0, 0.35),       /* dark bottom-right shade */
-    0 4px 10px rgba(0,0,0,0.3);                    /* outer drop shadow */
-  
-  overflow: hidden;
+    /* Soft bevel edges */
+    box-shadow: inset 2px 2px 6px rgba(255, 255, 255, 0.35),
+        /* light top-left highlight */ inset -2px -2px 6px rgba(0, 0, 0, 0.35),
+        /* dark bottom-right shade */ 0 4px 10px rgba(0, 0, 0, 0.3); /* outer drop shadow */
+
+    overflow: hidden;
 }
 
 /* Different gradients per card */
 .c-rumpus__gradient-top {
-  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.6));
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.6)
+    );
 }
 .c-rumpus__gradient-mid {
-  background: linear-gradient(to bottom, rgba(255,255,255,.6), rgba(255,255,255,0));
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.6),
+        rgba(255, 255, 255, 0)
+    );
 }
 .c-rumpus__gradient-bottom {
-  background: linear-gradient(to bottom, rgba(255,255,255,.5), rgba(255,255,255,.1));
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.5),
+        rgba(255, 255, 255, 0.1)
+    );
 }
 
 /* Card body */
 .c-rumpus__item-info {
-  padding: 40px 20px;
-  text-align: center;
+    padding: 40px 20px;
+    text-align: center;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* FIX: no more vertical centering */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* FIX: no more vertical centering */
 }
 
 .c-rumpus__item-title {
-  font-size: 36px;
-  margin-bottom: 20px;
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 
 /* Animation */
 @keyframes card-shrink {
-  0%, 75% {
-    scale: 100%;
-  }
-  100% {
-    scale: 85%;
-  }
+    0%,
+    75% {
+        scale: 100%;
+    }
+    100% {
+        scale: 85%;
+    }
 }
 
 @keyframes card-fade {
-  0% {
-    opacity: 1;
-    filter: blur(0px);
-  }
-  100% {
-    opacity: 0;
-    filter: blur(12px);
-  }
+    0% {
+        opacity: 1;
+        filter: blur(0px);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(12px);
+    }
 }
