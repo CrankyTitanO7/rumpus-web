@@ -1,6 +1,6 @@
 import { fetchCommits, fetchRepoDetails } from "./actions";
-import CommitList from "./CommitList"; // looks like an error but DON'T TOUCH IT it works fine.
 import "./blogstyle.css";
+import CommitList from "./CommitList"; // looks like an error but DON'T TOUCH IT it works fine.
 import RefreshButton from "./RefreshButton"; // Small client component for the button
 
 export default async function Page() {
@@ -141,7 +141,7 @@ export default async function Page() {
                             <br />
                             <p className="blog">
                                 Well-cum to my awesome blog.
-                                <br />- Jaden Lee, class of 2029
+                                <br />- Coochie Clicker
                             </p>
                         </div>
 
@@ -158,7 +158,7 @@ export default async function Page() {
                                 features and content. Thank you for your
                                 support, and we look forward to sharing our
                                 journey with you!
-                                <br />- Jaden Lee, class of 2029
+                                <br />- Coochie Clicker
                             </p>
                         </div>
                     </div>

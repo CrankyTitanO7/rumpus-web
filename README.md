@@ -74,7 +74,7 @@ again, a lot of this was taken from the README.md.old file, but you can read the
 ## about the developers
 
 This website was developed by the following developers:
-- Jaden Lee, @CrankyTitanO7, 2025-
+- Coochie Clicker, aka Jaden Lee, @CrankyTitanO7, 2025-
 
 ## code license 
 
