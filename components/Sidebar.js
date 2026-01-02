@@ -242,6 +242,22 @@ export default function Sidebar() {
         .topbar a:hover {
           color: #ddd;
         }
+        
+        /* Mobile: enable text wrapping for topbar */
+        @media (max-width: 768px) {
+          .topbar ul {
+            flex-wrap: wrap;
+          }
+          
+          .topbar li {
+            white-space: normal;
+          }
+          
+          .topbar a {
+            white-space: normal;
+            word-wrap: break-word;
+          }
+        }
 
         /* Sidebar styles (side icon + drawer) */
         .sidebar-wrapper {
@@ -277,7 +293,7 @@ export default function Sidebar() {
           top: 0;
           width: 220px;
           height: 100%;
-          background: #000000ff;
+          background:rgb(54, 54, 54);
           padding: 16px;
           box-shadow: 2px 0 8px rgba(209, 39, 39, 0.57);
           transform: translateX(-100%);
@@ -303,6 +319,29 @@ export default function Sidebar() {
         .sidebar a {
           color: white;
           text-decoration: none;
+          /* Gumroad-inspired button style */
+          --bg: #000;
+          --hover-bg:rgb(144, 7, 7);
+          --hover-text: #fff;
+          cursor: pointer;
+          border: 1px solid var(--bg);
+          border-radius: 4px;
+          padding: 0.8em 2em;
+          background: var(--bg);
+          transition: 0.2s;
+          display: inline-block;
+        }
+        
+        .sidebar a:hover {
+          color: var(--hover-text);
+          transform: translate(-0.25rem, -0.25rem);
+          background: var(--hover-bg);
+          box-shadow: 0.25rem 0.25rem var(--bg);
+        }
+        
+        .sidebar a:active {
+          transform: translate(0);
+          box-shadow: none;
         }
       `}</style>
         </>

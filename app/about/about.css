@@ -68,7 +68,7 @@
     }
     
     .arrow-container-1 .arrow-1 {
-        transform: rotate(-90deg);
+        transform: rotate(90deg);
         width: 40px !important;
         height: 60px !important;
     }

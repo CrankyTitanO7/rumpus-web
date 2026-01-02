@@ -117,8 +117,12 @@ a {
     }
     
     .header-figure {
-        flex: 0 0 auto !important;
+        flex: 1 1 100% !important;
+        width: 100% !important;
         margin: 0 auto;
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
     }
     
     /* Ensure images are responsive */
