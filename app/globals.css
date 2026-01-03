@@ -316,27 +316,54 @@ section:nth-of-type(even) {
     border-radius: 12px;
 }
 
-/* first child animation */
-.c-rumpus__item:first-child {
-    view-timeline-name: --card;
-    view-timeline-axis: block;
-    animation-timeline: --card;
+/* Animation: timeline when supported, fallback otherwise */
+@supports (animation-timeline: --card) {
+    /* Safe defaults for timeline-supporting browsers */
+    .c-rumpus__item {
+        transform: none;
+        opacity: 1;
+    }
 
-    /* run BOTH animations */
-    animation-name: card-shrink, card-fade;
-    animation-range: entry 100% exit 120%;
-    animation-fill-mode: both;
+    .c-rumpus__item:first-child {
+        view-timeline-name: --card;
+        view-timeline-axis: block;
+        animation-timeline: --card;
+
+        /* run BOTH animations */
+        animation-name: card-shrink, card-fade;
+        animation-range: entry 100% exit 120%;
+        animation-fill-mode: both;
+    }
+
+    .c-rumpus__item:not(:first-child):not(:last-child) {
+        view-timeline-name: --card;
+        view-timeline-axis: block;
+        animation-timeline: --card;
+
+        /* run BOTH animations */
+        animation-name: card-shrink, card-fade;
+        animation-range: entry 50% exit 120%;
+        animation-fill-mode: both;
+    }
 }
 
-.c-rumpus__item:not(:first-child):not(:last-child) {
-    view-timeline-name: --card;
-    view-timeline-axis: block;
-    animation-timeline: --card;
+/* Fallback for browsers without animation-timeline (e.g., Firefox)
+   We use a simple scale/opacity/blur transition driven by JS (IntersectionObserver)
+   so the visual effect is similar without touching Chrome behavior. */
+.timeline-fallback .c-rumpus__item {
+    --fade: 0;
+    /* Match Chrome's animation: scale down to ~0.85, blur up to ~12px, opacity down to 0 */
+    transform: scale(calc(1 - var(--fade) * 0.15));
+    opacity: calc(1 - var(--fade));
+    filter: blur(calc(var(--fade) * 12px));
+    /* transitions for non-RAF toggles (keeps things smooth on slow devices)
+       real-time fade uses JS-controlled --fade for smooth proportional changes */
+    transition: transform 120ms linear, opacity 120ms linear, filter 120ms linear;
+}
 
-    /* run BOTH animations */
-    animation-name: card-shrink, card-fade;
-    animation-range: entry 50% exit 120%;
-    animation-fill-mode: both;
+.timeline-fallback .c-rumpus__item.in-view {
+    /* keep for semantics only — do not override visual properties so JS-driven --fade can work */
+    /* no transform/opacity/filter here — those are controlled via --fade */
 }
 
 /* Gradient block */
@@ -451,10 +478,10 @@ section:nth-of-type(even) {
 @keyframes card-shrink {
     0%,
     75% {
-        scale: 100%;
+        transform: scale(1);
     }
     100% {
-        scale: 85%;
+        transform: scale(0.85);
     }
 }
 

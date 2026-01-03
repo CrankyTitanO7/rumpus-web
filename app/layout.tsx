@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ScrollFallback from "../components/ScrollFallback";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -18,11 +19,12 @@ export const metadata: Metadata = {
     icons: {
         icon: "/wah.ico",
     },
-    viewport: {
-        width: "device-width",
-        initialScale: 1,
-        maximumScale: 5,
-    },
+};
+
+export const viewport = {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -36,6 +38,7 @@ export default function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 {children}
+                <ScrollFallback />
             </body>
         </html>
     );
