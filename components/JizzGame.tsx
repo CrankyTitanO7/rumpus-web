@@ -8,14 +8,28 @@ export default function PowerJumpGame() {
 
     const [isMobile, setIsMobile] = useState(false);
     const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
+    const [isFullscreen, setIsFullscreen] = useState(false);
     
     const width = dimensions.width;
     const height = dimensions.height;
-    const groundY = height - 80;
-    const birdX = 160;
-    const birdRadius = 18;
-    const pipeSpacing = 50;
-    const groundHeight = 80;
+
+    // Logical game size (used for physics and drawing in logical coordinates)
+    const BASE_WIDTH = 800;
+    const BASE_HEIGHT = 500;
+    const BASE_GROUND_HEIGHT = 80;
+    const BASE_BIRD_X = 160;
+    const BASE_BIRD_RADIUS = 18;
+    const BASE_PIPE_SPACING = 50;
+    const BASE_PIPE_WIDTH = 56;
+    const BASE_BIRD_DRAW_SIZE = 42;
+
+    const LOGICAL_WIDTH = BASE_WIDTH;
+    const LOGICAL_HEIGHT = BASE_HEIGHT;
+    const groundY = LOGICAL_HEIGHT - BASE_GROUND_HEIGHT;
+    const birdX = BASE_BIRD_X;
+    const birdRadius = BASE_BIRD_RADIUS;
+    const pipeSpacing = BASE_PIPE_SPACING;
+    const groundHeight = BASE_GROUND_HEIGHT;
 
     const birdImgRef = useRef<HTMLImageElement | null>(null);
     const eyeImgRef = useRef<HTMLImageElement | null>(null);
@@ -41,7 +55,7 @@ export default function PowerJumpGame() {
         powerPos: 0.5,
         powerDir: 1,
         pipes: [] as Array<{ x: number; height: number; passed: boolean }>,
-        nextPipeX: width + 60,
+        nextPipeX: BASE_WIDTH + 60,
         score: 0,
         highScore: 0,
         alive: true,
@@ -90,7 +104,7 @@ export default function PowerJumpGame() {
         s.powerPos = 0.5;
         s.powerDir = 1;
         s.pipes = [];
-        s.nextPipeX = width + 60;
+        s.nextPipeX = BASE_WIDTH + 60;
         s.score = 0;
         s.alive = true;
         s.prepTime = 0;
@@ -112,6 +126,48 @@ export default function PowerJumpGame() {
             document.exitFullscreen();
         }
     }
+
+    // Keep track of fullscreen state and resize the canvas when entering/exiting fullscreen
+    useEffect(() => {
+        function onResizeInFullscreen() {
+            if (document.fullscreenElement === containerRef.current && containerRef.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                setDimensions({
+                    width: Math.max(100, Math.floor(rect.width)),
+                    height: Math.max(100, Math.floor(rect.height)),
+                });
+            }
+        }
+        function onFullscreenChange() {
+            const isFS = document.fullscreenElement === containerRef.current;
+            setIsFullscreen(isFS);
+            if (isFS) {
+                if (containerRef.current) {
+                    const rect = containerRef.current.getBoundingClientRect();
+                    setDimensions({
+                        width: Math.max(100, Math.floor(rect.width)),
+                        height: Math.max(100, Math.floor(rect.height)),
+                    });
+                }
+                window.addEventListener("resize", onResizeInFullscreen);
+            } else {
+                // restore non-fullscreen sizes based on viewport
+                if (window.innerWidth <= 768) {
+                    const newWidth = Math.min(800, window.innerWidth - 32);
+                    const newHeight = Math.floor(newWidth * 0.625);
+                    setDimensions({ width: newWidth, height: newHeight });
+                } else {
+                    setDimensions({ width: 800, height: 500 });
+                }
+                window.removeEventListener("resize", onResizeInFullscreen);
+            }
+        }
+        document.addEventListener("fullscreenchange", onFullscreenChange);
+        return () => {
+            document.removeEventListener("fullscreenchange", onFullscreenChange);
+            window.removeEventListener("resize", onResizeInFullscreen);
+        };
+    }, []);
 
     function jumpWithPower(p: number) {
         const s = stateRef.current;
@@ -180,7 +236,19 @@ export default function PowerJumpGame() {
             lastTimeRef.current = t;
 
             const ctx = canvas.getContext("2d")!;
+
+            // Compute uniform scale to fit logical game into canvas pixels and center it.
+            const scale = Math.min(width / LOGICAL_WIDTH, height / LOGICAL_HEIGHT);
+            const offsetX = Math.round((width - LOGICAL_WIDTH * scale) / 2);
+            const offsetY = Math.round((height - LOGICAL_HEIGHT * scale) / 2);
+
+            // Clear the entire pixel canvas first to remove artifacts in letterbox margins
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
+            ctx.clearRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 
             const s = stateRef.current;
 
@@ -217,13 +285,13 @@ export default function PowerJumpGame() {
                 s.pipes[i].x -= pipeSpeed * dt;
                 if (
                     !s.pipes[i].passed &&
-                    s.pipes[i].x + 48 < birdX - birdRadius
+                    s.pipes[i].x + (BASE_PIPE_WIDTH - 8) < birdX - birdRadius
                 ) {
                     s.pipes[i].passed = true;
                     s.score++;
                     if (s.score > s.highScore) s.highScore = s.score;
                     setTick((t) => t + 1);
-                    if (s.pipes[i].x + pipeSpacing < width) spawnPipe();
+                    if (s.pipes[i].x + pipeSpacing < LOGICAL_WIDTH) spawnPipe();
                 }
                 if (s.pipes[i].x < -120) s.pipes.splice(i, 1);
             }
@@ -261,10 +329,10 @@ export default function PowerJumpGame() {
             // --- DRAWING ORDER ---
 
             if (bgImgRef.current)
-                ctx.drawImage(bgImgRef.current, 0, 0, width, height);
+                ctx.drawImage(bgImgRef.current, 0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
 
             for (const pipe of s.pipes) {
-                const w = 56;
+                const w = BASE_PIPE_WIDTH;
                 const h = pipe.height;
                 ctx.fillStyle = "#2f9e44";
                 ctx.fillRect(pipe.x, groundY - h, w, h);
@@ -273,10 +341,10 @@ export default function PowerJumpGame() {
             }
 
             ctx.fillStyle = "#654321";
-            ctx.fillRect(0, groundY, width, groundHeight);
+            ctx.fillRect(0, groundY, LOGICAL_WIDTH, groundHeight);
 
             ctx.fillStyle = "#555";
-            ctx.fillRect(0, groundY, width, 4);
+            ctx.fillRect(0, groundY, LOGICAL_WIDTH, 4);
 
             for (let i = s.jumpEffects.length - 1; i >= 0; i--) {
                 const e = s.jumpEffects[i];
@@ -305,19 +373,20 @@ export default function PowerJumpGame() {
 
             // --- BIRD ---
             if (birdImgRef.current) {
+                const drawSize = BASE_BIRD_DRAW_SIZE;
                 ctx.drawImage(
                     birdImgRef.current,
-                    birdX - 18,
-                    s.birdY - 18,
-                    42,
-                    42
+                    birdX - drawSize / 2,
+                    s.birdY - drawSize / 2,
+                    drawSize,
+                    drawSize
                 );
 
                 // 🔵 Blue tint overlay
                 if (s.blueTint > 0) {
                     ctx.globalCompositeOperation = "source-atop";
                     ctx.fillStyle = `rgba(50,150,255,${s.blueTint})`;
-                    ctx.fillRect(birdX - 18, s.birdY - 18, 42, 42);
+                    ctx.fillRect(birdX - drawSize / 2, s.birdY - drawSize / 2, drawSize, drawSize);
                     ctx.globalCompositeOperation = "source-over";
                 }
             } else {
@@ -344,8 +413,8 @@ export default function PowerJumpGame() {
             if (s.powerActive) {
                 const barW = 200;
                 const barH = 18;
-                const bx = width - barW - 24;
-                const by = height - 60;
+                const bx = LOGICAL_WIDTH - barW - 24;
+                const by = LOGICAL_HEIGHT - 60;
 
                 ctx.fillStyle = "rgba(255,255,255,0.12)";
                 ctx.fillRect(bx, by, barW, barH);
@@ -368,6 +437,7 @@ export default function PowerJumpGame() {
                 ctx.fillText("Click or Space to jump", bx - 2, by - 12);
             }
 
+            ctx.restore();
             animRef.current = requestAnimationFrame(loop);
         }
 
@@ -412,17 +482,17 @@ export default function PowerJumpGame() {
                 <div
                     ref={containerRef}
                     className="relative rounded-lg shadow-lg overflow-hidden bg-white group"
-                    style={{ width: '100%', maxWidth: width }}
+                    style={{ width: '100%', maxWidth: isFullscreen ? '100%' : width }}
                 >
                     <canvas
                         ref={canvasRef}
                         onClick={handleContainerClick}
-                        className="block w-full h-auto cursor-pointer object-contain bg-black"
-                        style={{ 
-                            maxHeight: "100vh", 
+                        className="block w-full h-full cursor-pointer bg-black"
+                        style={{
+                            maxHeight: "100vh",
                             maxWidth: "100%",
-                            width: `${width}px`,
-                            height: `${height}px`
+                            width: isFullscreen ? '100%' : `${width}px`,
+                            height: isFullscreen ? '100%' : `${height}px`,
                         }}
                     />
 

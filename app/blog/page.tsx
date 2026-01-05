@@ -70,7 +70,7 @@ export default async function Page() {
 
                 {/* GitHub Preview Card with Dynamic Stats */}
                 <a
-                    href="https://github.com/CrankyTitanO7/rumpus-web"
+                    href="https://github.com/yale-rumpus/rumpus-web"
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
@@ -102,7 +102,7 @@ export default async function Page() {
                                 fontSize: "16px",
                             }}
                         >
-                            CrankyTitanO7 / rumpus-web
+                            yale-rumpus / rumpus-web
                         </div>
                         <div
                             style={{

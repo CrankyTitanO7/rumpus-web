@@ -4,25 +4,35 @@ import Image from "next/image";
 import "./about.css";
 
 export default function AboutPage() {
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const form = e.currentTarget;
-        const name = (form.elements.namedItem("name") as HTMLInputElement)
-            .value;
-        const email = (form.elements.namedItem("email") as HTMLInputElement)
-            .value;
-        const description = (
-            form.elements.namedItem("description") as HTMLTextAreaElement
-        ).value;
 
-        const title = encodeURIComponent(`Bug report from ${name}`);
-        const body = encodeURIComponent(
-            `**Name:** ${name}\n**Email:** ${email}\n\n**Issue Description:**\n${description}`
-        );
+        const payload = {
+            name:
+                (form.elements.namedItem("name") as HTMLInputElement)?.value ||
+                "Anonymous",
+            email:
+                (form.elements.namedItem("email") as HTMLInputElement)?.value ||
+                "Not provided",
+            description: (
+                form.elements.namedItem("description") as HTMLTextAreaElement
+            ).value,
+        };
 
-        const url = `https://github.com/CrankyTitanO7/rumpus-web/issues/new?title=${title}&body=${body}`;
-        window.open(url, "_blank");
+        const res = await fetch("/api/report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+            alert("Bug report submitted successfully!");
+            form.reset();
+        } else {
+            alert("Failed to submit bug report.");
+        }
     }
 
     return (
@@ -56,7 +66,6 @@ export default function AboutPage() {
 
                     {/* RIGHT: CONTENT */}
                     <div className="flex flex-col gap-10 max-w-md">
-                        {/* LEFT ARROW (UP on mobile) */}
                         <div className="flex flex-row items-center gap-4 arrow-container-1">
                             <svg
                                 className="arrow arrow-1"
@@ -76,8 +85,8 @@ export default function AboutPage() {
                             </svg>
                             <span>Meet the authors behind the project</span>
                         </div>
+
                         <div id="report-bug" className="report-bug">
-                            {/* DOWN ARROW */}
                             <div className="flex flex-row items-start gap-4">
                                 <svg
                                     className="arrow arrow-2"
@@ -97,6 +106,7 @@ export default function AboutPage() {
                                 </svg>
                                 <span>Report a Bug Issue below:</span>
                             </div>
+
                             {/* FORM */}
                             <form
                                 className="flex flex-col gap-4"
@@ -105,14 +115,12 @@ export default function AboutPage() {
                                 <input
                                     name="name"
                                     className="p-3 bg-neutral-800 text-white border border-neutral-600"
-                                    placeholder="Your name"
-                                    required
+                                    placeholder="Your name (optional)"
                                 />
                                 <input
                                     name="email"
                                     className="p-3 bg-neutral-800 text-white border border-neutral-600"
-                                    placeholder="Your email"
-                                    required
+                                    placeholder="Your email (optional)"
                                 />
                                 <textarea
                                     name="description"
@@ -124,19 +132,14 @@ export default function AboutPage() {
                                     Submit
                                 </button>
                             </form>
-                            <h1>instructions:</h1>
-                            <p>
-                                when you click submit, it will redirect you to
-                                our bug report page. You should be able to click
-                                submit on that page. For additional assistance,
-                                feel free to contact us (below)
-                            </p>{" "}
-                            <br />{" "}
-                            <h2>
-                                <a
-                                    href="mailto:yalerumpus@gmail.com?subject=Name%20and%20Bug%20Report&body=Describe%20the%20issue%20here"
-                                    type="email"
-                                >
+
+                            <p className="text-sm opacity-80">
+                                Submitting will create a private GitHub issue for
+                                our team. No account required.
+                            </p>
+
+                            <h2 className="mt-4">
+                                <a href="mailto:yalerumpus@gmail.com">
                                     yalerumpus@gmail.com
                                 </a>
                             </h2>
@@ -145,7 +148,6 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* ✅ MUST be inside the component */}
             <style jsx>{`
                 .arrow-path {
                     stroke-dasharray: 120;
@@ -153,7 +155,6 @@ export default function AboutPage() {
                     animation: draw-arrow 1.2s ease-out forwards;
                 }
 
-                /* SEQUENCE DELAYS */
                 .arrow-1 .arrow-path {
                     animation-delay: 0.2s;
                 }
