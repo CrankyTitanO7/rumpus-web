@@ -9,12 +9,16 @@ const DynamicGame = dynamic(() => import("@/components/JizzGame"), {
 const DynamicGame1 = dynamic(() => import("@/components/AssGame"), {
     ssr: false,
 });
+const DynamicGame2 = dynamic(() => import("@/components/WordleGame"), {
+    ssr: false,
+});
 
 export default function DynamicGameWrapper() {
     return (
         <>
             <DynamicGame />
             <DynamicGame1 />
+            <DynamicGame2 />
         </>
     );
 }
