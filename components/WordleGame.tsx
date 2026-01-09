@@ -1,16 +1,35 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { getRandomYalie } from "./getRandomYalie";
 
-const WORD_LENGTH = 5;
+const WORD_LENGTH = 7;
 const MAX_GUESSES = 6;
 
-// Simple word list - in a real app, you'd have a larger list
-const WORDS = [
-    'REACT', 'WORLD', 'GAMES', 'CODE', 'BUILD', 'LEARN', 'THINK', 'SMART', 'QUICK', 'BRAVE',
-    'CLOUD', 'DREAM', 'FLAME', 'GRAPE', 'HOUSE', 'IMAGE', 'JUMBO', 'KNIFE', 'LIGHT', 'MOUSE',
-    'NIGHT', 'OCEAN', 'PLANE', 'QUEEN', 'RIVER', 'STONE', 'TABLE', 'UNCLE', 'VOICE', 'WINDY'
-];
+// Simple phrase list - 4 letters + 1 letter + 2 digits
+// const WORDS = [
+//     'CODEA42', 'REACTS99', 'BUILDZ88', 'LEARNP77', 'THINKQ11', 'SMARTV22', 'QUICKW33', 'BRAVEX44',
+//     'CLOUDY55', 'DREAMS66', 'FLAMEA77', 'GRAPEB88', 'HOUSEC99', 'IMAGED00', 'JUMBOF11', 'KNIFEG22',
+//     'LIGHTH33', 'MOUSEI44', 'NIGHTJ55', 'OCEANK66', 'PLANEL77', 'QUEENM88', 'RIVERN99', 'STONEO00',
+//     'TABLEP11', 'UNCLEQ22', 'VOICER33', 'WINDYS44', 'WORLDZ55', 'GAMESA66'
+// ];
+
+//using yalies API from YCS
+interface YalieData {
+    fname: string;
+    lname: string;
+    year: number | string;
+    college: string;
+    profile: string;
+}
+
+const getTargetWord = (yalie: YalieData): string => {
+    const fname4 = yalie.fname.substring(0, 4).toUpperCase();
+    const lnameInitial = yalie.lname.charAt(0).toUpperCase();
+    const yearLast2 = String(yalie.year).slice(-2);
+    return fname4 + lnameInitial + yearLast2;
+};
+
 
 type LetterStatus = 'correct' | 'present' | 'absent' | '';
 
@@ -24,6 +43,7 @@ interface Guess {
 }
 
 const WordleGame: React.FC = () => {
+    const [yalieData, setYalieData] = useState<YalieData | null>(null);
     const [targetWord, setTargetWord] = useState('');
     const [guesses, setGuesses] = useState<Guess[]>([]);
     const [currentGuess, setCurrentGuess] = useState('');
@@ -34,9 +54,19 @@ const WordleGame: React.FC = () => {
     const [revealingIndex, setRevealingIndex] = useState(0);
 
     useEffect(() => {
-        // Select random word
-        const randomWord = WORDS[Math.floor(Math.random() * WORDS.length)];
-        setTargetWord(randomWord);
+        const fetchYalie = async () => {
+            try {
+                const yalie = await getRandomYalie();
+                setYalieData(yalie);
+                const target = getTargetWord(yalie);
+                setTargetWord(target);
+            } catch (error) {
+                console.error('Failed to fetch Yalie:', error);
+                // Fallback to a static word
+                setTargetWord('JOHND24');
+            }
+        };
+        fetchYalie();
     }, []);
 
     const checkGuess = (guess: string): Guess => {
@@ -86,7 +116,7 @@ const WordleGame: React.FC = () => {
 
     const submitGuess = () => {
         if (currentGuess.length !== WORD_LENGTH) {
-            setMessage('Word must be 5 letters long');
+            setMessage('Phrase must be 7 characters long');
             return;
         }
 
@@ -120,7 +150,11 @@ const WordleGame: React.FC = () => {
                     setMessage('Congratulations! You won!');
                 } else if (newGuesses.length >= MAX_GUESSES) {
                     setGameStatus('lost');
-                    setMessage(`Game over! The word was ${targetWord}`);
+                    if (yalieData) {
+                        setMessage(`${yalieData.fname} ${yalieData.lname} ${yalieData.year}`);
+                    } else {
+                        setMessage(`Game over! The word was ${targetWord}`);
+                    }
                 } else {
                     setMessage('');
                 }
@@ -136,7 +170,7 @@ const WordleGame: React.FC = () => {
             submitGuess();
         } else if (key === 'BACKSPACE') {
             setCurrentGuess(currentGuess.slice(0, -1));
-        } else if (currentGuess.length < WORD_LENGTH && /^[A-Z]$/.test(key)) {
+        } else if (currentGuess.length < WORD_LENGTH && /^[A-Z0-9]$/.test(key)) {
             setCurrentGuess(currentGuess + key);
         }
     };
@@ -199,8 +233,18 @@ const WordleGame: React.FC = () => {
     };
 
     const resetGame = () => {
-        const randomWord = WORDS[Math.floor(Math.random() * WORDS.length)];
-        setTargetWord(randomWord);
+        const fetchYalie = async () => {
+            try {
+                const yalie = await getRandomYalie();
+                setYalieData(yalie);
+                const target = getTargetWord(yalie);
+                setTargetWord(target);
+            } catch (error) {
+                console.error('Failed to fetch Yalie:', error);
+                setTargetWord('JOHND24');
+            }
+        };
+        fetchYalie();
         setGuesses([]);
         setCurrentGuess('');
         setGameStatus('playing');
@@ -215,9 +259,9 @@ const WordleGame: React.FC = () => {
             <h1 className="text-3xl font-bold mb-4">Wordle</h1>
 
             {/* Game Grid */}
-            <div className="grid grid-rows-6 gap-2 mb-4">
+            <div className="flex flex-col gap-2 mb-4">
                 {Array.from({ length: MAX_GUESSES }, (_, rowIndex) => (
-                    <div key={rowIndex} className="grid grid-cols-5 gap-2">
+                    <div key={rowIndex} className="flex gap-2">
                         {Array.from({ length: WORD_LENGTH }, (_, colIndex) => {
                             const guess = guesses[rowIndex];
                             const letter = guess ? guess.letters[colIndex] : null;
@@ -230,6 +274,11 @@ const WordleGame: React.FC = () => {
                             } else if (letter) {
                                 displayChar = letter.char;
                                 className += ` ${getLetterClass(letter.status)}`;
+                            }
+
+                            // Add breaks after 4th and 5th characters
+                            if (colIndex === 3 || colIndex === 4) {
+                                className += ' mr-4';
                             }
 
                             return (
@@ -297,6 +346,22 @@ const WordleGame: React.FC = () => {
                                 disabled={gameStatus !== 'playing'}
                             >
                                 {letter}
+                            </button>
+                        );
+                    })}
+                </div>
+                <div className="flex justify-center mb-2">
+                    {'1234567890'.split('').map(digit => {
+                        const status = letterStatuses.get(digit) || '';
+                        const baseClass = getLetterClass(status);
+                        return (
+                            <button
+                                key={digit}
+                                onClick={() => handleKeyPress(digit)}
+                                className={`m-1 px-2 py-1 ${baseClass} rounded`}
+                                disabled={gameStatus !== 'playing'}
+                            >
+                                {digit}
                             </button>
                         );
                     })}
