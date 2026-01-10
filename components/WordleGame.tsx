@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Countdown from "./Countdown";
 import { getRandomYalie } from "./getRandomYalie";
 
-const WORD_LENGTH = 7;
+const WORD_LENGTH = 6;
 const MAX_GUESSES = 6;
 
 // Simple phrase list - 4 letters + 1 letter + 2 digits
@@ -14,6 +14,22 @@ const MAX_GUESSES = 6;
 //     'LIGHTH33', 'MOUSEI44', 'NIGHTJ55', 'OCEANK66', 'PLANEL77', 'QUEENM88', 'RIVERN99', 'STONEO00',
 //     'TABLEP11', 'UNCLEQ22', 'VOICER33', 'WINDYS44', 'WORLDZ55', 'GAMESA66'
 // ];
+
+const collegeAbbreviations: { [key: string]: string } = {
+    'Berkeley': 'BK',
+    'Branford': 'BR',
+    'Grace Hopper': 'GH',
+    'Davenport': 'DA',
+    'Ezra Stiles': 'ES',
+    'Jonathan Edwards': 'JE',
+    'Morse': 'MO',
+    'Pauli Murray': 'PM',
+    'Pierson': 'PC',
+    'Saybrook': 'SY',
+    'Silliman': 'SI',
+    'Timothy Dwight': 'TD',
+    'Trumbull': 'TR',
+};
 
 //using yalies API from YCS
 interface YalieData {
@@ -25,10 +41,10 @@ interface YalieData {
 }
 
 const getTargetWord = (yalie: YalieData): string => {
-    const fname4 = yalie.fname.substring(0, 4).toUpperCase();
-    const lnameInitial = yalie.lname.charAt(0).toUpperCase();
+    const initials = yalie.fname.charAt(0).toUpperCase() + yalie.lname.charAt(0).toUpperCase();
     const yearLast2 = String(yalie.year).slice(-2);
-    return fname4 + lnameInitial + yearLast2;
+    const collegeAbbrev = collegeAbbreviations[yalie.college] || 'XX';
+    return initials + yearLast2 + collegeAbbrev;
 };
 
 
@@ -65,7 +81,7 @@ const WordleGame: React.FC = () => {
                 localStorage.setItem('wordle-yalie-data', JSON.stringify(yalie));
             } catch (error) {
                 console.error('Failed to fetch Yalie:', error);
-                setTargetWord('JOHND24');
+                setTargetWord('JD24TD');
             }
         };
         fetchYalie();
@@ -149,7 +165,7 @@ const WordleGame: React.FC = () => {
 
     const submitGuess = () => {
         if (currentGuess.length !== WORD_LENGTH) {
-            setMessage('Phrase must be 7 characters long');
+            setMessage('Phrase must be 6 characters long');
             return;
         }
 
@@ -181,14 +197,14 @@ const WordleGame: React.FC = () => {
                 if (currentGuess.toUpperCase() === targetWord) {
                     setGameStatus('won');
                     if (yalieData) {
-                        setMessage(`Congratulations! You won! The person was ${yalieData.fname} ${yalieData.lname} ${yalieData.year}`);
+                        setMessage(`Congratulations! You won! The person was ${yalieData.fname} ${yalieData.lname} ${yalieData.year} ${yalieData.college}`);
                     } else {
                         setMessage('Congratulations! You won!');
                     }
                 } else if (newGuesses.length >= MAX_GUESSES) {
                     setGameStatus('lost');
                     if (yalieData) {
-                        setMessage(`${yalieData.fname} ${yalieData.lname} ${yalieData.year}`);
+                        setMessage(`${yalieData.fname} ${yalieData.lname} ${yalieData.year} ${yalieData.college}`);
                     } else {
                         setMessage(`Game over! The word was ${targetWord}`);
                     }
@@ -272,17 +288,17 @@ const WordleGame: React.FC = () => {
 
 
     return (
-        <div className="flex flex-col items-center p-4 max-w-md mx-auto">
+        <div className="flex flex-col items-center p-2 sm:p-4 max-w-sm sm:max-w-md mx-auto">
             <h1 className="text-3xl font-bold mb-4">Yurdle</h1>
             <p>Welcome to the Yurdle by Rumpus! each day we select one randomly selected student from the Yalies API (by Y/CS) and we have you all guess who it is. Good luck!</p>
 
             {/* Column Descriptions */}
-            <div className="flex mb-2 text-sm font-semibold">
-                <div className="flex justify-center items-center" style={{ width: '13.5rem' }}>First Name</div>
-                <div className="w-4"></div>
-                <div className="flex justify-center items-center" style={{ width: '3rem' }}>Last Initial</div>
-                <div className="w-4"></div>
-                <div className="flex justify-center items-center" style={{ width: '6.5rem' }}>Year</div>
+            <div className="flex mb-2 text-xs sm:text-sm font-bold">
+                <div className="flex justify-center items-center" style={{ width: 'calc(2 * 2.5rem + 0.5rem)' }}>Initials</div>
+                <div className="w-2 sm:w-4"></div>
+                <div className="flex justify-center items-center" style={{ width: 'calc(2 * 2.5rem + 0.5rem)' }}>Year</div>
+                <div className="w-2 sm:w-4"></div>
+                <div className="flex justify-center items-center" style={{ width: 'calc(2 * 2.5rem + 0.5rem)' }}>College</div>
             </div>
 
             {/* Game Grid */}
@@ -294,7 +310,7 @@ const WordleGame: React.FC = () => {
                             const letter = guess ? guess.letters[colIndex] : null;
 
                             let displayChar = '';
-                            let className = 'w-12 h-12 flex items-center justify-center text-xl font-bold border-2 border-gray-300';
+                            let className = 'w-10 h-10 sm:w-14 sm:h-14 md:w-12 md:h-12 flex items-center justify-center text-lg sm:text-xl font-bold border-2 border-gray-300';
 
                             if (rowIndex === guesses.length && gameStatus === 'playing') {
                                 displayChar = currentGuess[colIndex] || '';
@@ -303,8 +319,8 @@ const WordleGame: React.FC = () => {
                                 className += ` ${getLetterClass(letter.status)}`;
                             }
 
-                            // Add breaks after 4th and 5th characters
-                            if (colIndex === 3 || colIndex === 4) {
+                            // Add breaks after 2nd and 4th characters
+                            if (colIndex === 1 || colIndex === 3) {
                                 className += ' mr-4';
                             }
 
@@ -358,7 +374,7 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={digit}
                                     onClick={() => handleKeyPress(digit)}
-                                    className={`m-1 px-2 py-1 ${baseClass} rounded`}
+                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
                                     disabled={gameStatus !== 'playing'}
                                 >
                                     {digit}
@@ -374,7 +390,7 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={letter}
                                     onClick={() => handleKeyPress(letter)}
-                                    className={`m-1 px-2 py-1 ${baseClass} rounded`}
+                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
                                     disabled={gameStatus !== 'playing'}
                                 >
                                     {letter}
@@ -390,7 +406,7 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={letter}
                                     onClick={() => handleKeyPress(letter)}
-                                    className={`m-1 px-2 py-1 ${baseClass} rounded`}
+                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
                                     disabled={gameStatus !== 'playing'}
                                 >
                                     {letter}
@@ -413,7 +429,7 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={letter}
                                     onClick={() => handleKeyPress(letter)}
-                                    className={`m-1 px-2 py-1 ${baseClass} rounded`}
+                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
                                     disabled={gameStatus !== 'playing'}
                                 >
                                     {letter}

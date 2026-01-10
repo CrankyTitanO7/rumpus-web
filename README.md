@@ -58,6 +58,10 @@ bun dev
 ```
 then open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### a shoutout
+>to Y/CS
+>we use (or hope to use) in upcoming versions and games through the [Yalies API](https://github.com/YaleComputerSociety/Yalies) by Y/CS. this allows us to access certain directory records in the Yale Database, while also not managing ourselves the information people don't want to see online (eg if someone were to want their last name taken of the directory, we wouldn't have to handle that ourselves). Rumpus game developers would like to say thanks to Y/CS, and hope your asses remain just as voluptuous. Also please shower soon.
+
 ## about NextJs
 
 again, a lot of this was taken from the README.md.old file, but you can read the documentation listed below:
