@@ -2,8 +2,21 @@
 
 import { useState } from "react";
 
+
+
 export default function BlogSidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    // Smooth-scroll navigation handler
+    const handleNav = (e, hash) => {
+        e.preventDefault();
+        const el = document.querySelector(hash);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        setOpen(false);
+    };
 
     return (
         <>
@@ -43,16 +56,18 @@ export default function BlogSidebar() {
                                 <a href="/blog" onClick={() => setIsOpen(false)}>All Posts</a>
                             </li>
                             <li>
-                                <a href="#top" onClick={() => setIsOpen(false)}>Top</a>
+                                <a href="#top" onClick={(e) => handleNav(e, "#top")}>
+                                    top of page
+                                </a>
                             </li>
                             <li>
-                                <a href="#git" onClick={() => setIsOpen(false)}>GitHub Page</a>
+                                <a href="#git" onClick={(e) => setIsOpen(false)}>GitHub Page</a>
                             </li>
                             <li>
-                                <a href="#blog" onClick={() => setIsOpen(false)}>Official Blog Notes</a>
+                                <a href="#blog" onClick={(e) => setIsOpen(false)}>Official Blog Notes</a>
                             </li>
                             <li>
-                                <a href="#commits" onClick={() => setIsOpen(false)}>Recent Commits</a>
+                                <a href="#commits" onClick={(e) => setIsOpen(false)}>Recent Commits</a>
                             </li>
                         </ul>
                     </li>
