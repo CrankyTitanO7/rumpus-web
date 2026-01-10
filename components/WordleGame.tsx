@@ -21,6 +21,7 @@ const collegeAbbreviations: { [key: string]: string } = {
     'Silliman': 'SI',
     'Timothy Dwight': 'TD',
     'Trumbull': 'TR',
+    'Benjamin Franklin': 'BF',
 };
 
 const encouragingMessages = [
