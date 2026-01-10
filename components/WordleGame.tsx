@@ -7,14 +7,6 @@ import { getRandomYalie } from "./getRandomYalie";
 const WORD_LENGTH = 6;
 const MAX_GUESSES = 6;
 
-// Simple phrase list - 4 letters + 1 letter + 2 digits
-// const WORDS = [
-//     'CODEA42', 'REACTS99', 'BUILDZ88', 'LEARNP77', 'THINKQ11', 'SMARTV22', 'QUICKW33', 'BRAVEX44',
-//     'CLOUDY55', 'DREAMS66', 'FLAMEA77', 'GRAPEB88', 'HOUSEC99', 'IMAGED00', 'JUMBOF11', 'KNIFEG22',
-//     'LIGHTH33', 'MOUSEI44', 'NIGHTJ55', 'OCEANK66', 'PLANEL77', 'QUEENM88', 'RIVERN99', 'STONEO00',
-//     'TABLEP11', 'UNCLEQ22', 'VOICER33', 'WINDYS44', 'WORLDZ55', 'GAMESA66'
-// ];
-
 const collegeAbbreviations: { [key: string]: string } = {
     'Berkeley': 'BK',
     'Branford': 'BR',
@@ -31,7 +23,25 @@ const collegeAbbreviations: { [key: string]: string } = {
     'Trumbull': 'TR',
 };
 
-//using yalies API from YCS
+const encouragingMessages = [
+    "Nice work! 🎉",
+    "You're on fire! 🔥",
+    "Yurdle master! 🏆",
+    "Impressive! ⭐",
+    "You got it! 💪",
+    "Brilliant! 🧠",
+    "Fantastic! 🌟",
+    "Yale's brightest! 💡",
+];
+
+const consolationMessages = [
+    "Better luck tomorrow! 🌙",
+    "So close! almost had it! 😮",
+    "Tomorrow is a new day! ✨",
+    "Keep trying! 💪",
+    "The yalie will be waiting! 🎯",
+];
+
 interface YalieData {
     fname: string;
     lname: string;
@@ -47,6 +57,9 @@ const getTargetWord = (yalie: YalieData): string => {
     return initials + yearLast2 + collegeAbbrev;
 };
 
+const getRandomMessage = (messages: string[]): string => {
+    return messages[Math.floor(Math.random() * messages.length)];
+};
 
 type LetterStatus = 'correct' | 'present' | 'absent' | '';
 
@@ -101,10 +114,8 @@ const WordleGame: React.FC = () => {
         const today = new Date().toDateString();
 
         if (storedDate !== today) {
-            // New day, reset game
             resetGame();
         } else {
-            // Same day, load existing yalie data
             const storedYalie = localStorage.getItem('wordle-yalie-data');
             if (storedYalie) {
                 const yalie = JSON.parse(storedYalie);
@@ -112,7 +123,6 @@ const WordleGame: React.FC = () => {
                 const target = getTargetWord(yalie);
                 setTargetWord(target);
             } else {
-                // Fallback if no stored data
                 resetGame();
             }
         }
@@ -123,17 +133,15 @@ const WordleGame: React.FC = () => {
         const targetLetters = targetWord.split('');
         const guessLetters = guess.split('');
 
-        // First pass: mark correct letters
         guessLetters.forEach((char, index) => {
             if (char === targetLetters[index]) {
                 result.letters.push({ char, status: 'correct' });
-                targetLetters[index] = ''; // Remove from consideration
+                targetLetters[index] = '';
             } else {
                 result.letters.push({ char, status: '' });
             }
         });
 
-        // Second pass: mark present/absent
         result.letters.forEach((letter, index) => {
             if (letter.status === 'correct') return;
 
@@ -177,7 +185,6 @@ const WordleGame: React.FC = () => {
         setRevealingRow(guesses.length);
         setRevealingIndex(0);
 
-        // Start revealing animation
         const revealNext = (index: number) => {
             if (index < WORD_LENGTH) {
                 setTimeout(() => {
@@ -190,23 +197,22 @@ const WordleGame: React.FC = () => {
                     revealNext(index + 1);
                 }, 300);
             } else {
-                // Finished revealing
                 setRevealingRow(null);
                 setRevealingIndex(0);
 
                 if (currentGuess.toUpperCase() === targetWord) {
                     setGameStatus('won');
                     if (yalieData) {
-                        setMessage(`Congratulations! You won! The person was ${yalieData.fname} ${yalieData.lname} ${yalieData.year} ${yalieData.college}`);
+                        setMessage(`${getRandomMessage(encouragingMessages)} It was ${yalieData.fname} ${yalieData.lname} in ${yalieData.college}, class of ${yalieData.year}`);
                     } else {
-                        setMessage('Congratulations! You won!');
+                        setMessage(getRandomMessage(encouragingMessages));
                     }
                 } else if (newGuesses.length >= MAX_GUESSES) {
                     setGameStatus('lost');
                     if (yalieData) {
-                        setMessage(`${yalieData.fname} ${yalieData.lname} ${yalieData.year} ${yalieData.college}`);
+                        setMessage(`${getRandomMessage(consolationMessages)} It was ${yalieData.fname} ${yalieData.lname} in ${yalieData.college}, class of ${yalieData.year}`);
                     } else {
-                        setMessage(`Game over! The word was ${targetWord}`);
+                        setMessage(getRandomMessage(consolationMessages));
                     }
                 } else {
                     setMessage('');
@@ -238,16 +244,6 @@ const WordleGame: React.FC = () => {
         return () => window.removeEventListener('keydown', handleKeyboardEvent);
     }, [currentGuess, guesses, gameStatus]);
 
-    // const resetGame = () => {
-    //     const randomWord = WORDS[Math.floor(Math.random() * WORDS.length)];
-    //     setTargetWord(randomWord);
-    //     setGuesses([]);
-    //     setCurrentGuess('');
-    //     setGameStatus('playing');
-    //     setMessage('');
-    //     setLetterStatuses(new Map());
-    // };
-
     const getLetterClass = (status: LetterStatus) => {
         switch (status) {
             case 'correct': return 'bg-green-500 text-white transition-all duration-300';
@@ -259,7 +255,7 @@ const WordleGame: React.FC = () => {
 
     const generateShareText = () => {
         const guessCount = guesses.length;
-        let shareText = `Wordle ${guessCount}/6\n\n`;
+        let shareText = `Yurdle ${guessCount}/6\n\n`;
         guesses.forEach(guess => {
             guess.letters.forEach(letter => {
                 switch (letter.status) {
@@ -285,32 +281,28 @@ const WordleGame: React.FC = () => {
         }
     };
 
-
-
     return (
-        <div className="flex flex-col items-center p-2 sm:p-4 max-w-sm sm:max-w-md mx-auto">
-            <h1 className="text-3xl font-bold mb-4">Yurdle</h1>
-            <p>Welcome to the Yurdle by Rumpus! each day we select one randomly selected student from the Yalies API (by Y/CS) and we have you all guess who it is. Good luck!</p>
+        <div className="flex flex-col items-center p-2 sm:p-4 max-w-[95%] xs:max-w-sm sm:max-w-md mx-auto">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">Yurdle</h1>
+            <p className="text-xs sm:text-sm text-center mb-2">Guess the Yalie: Initials + Year + College</p>
 
-            {/* Column Descriptions */}
-            <div className="flex mb-2 text-xs sm:text-sm font-bold">
-                <div className="flex justify-center items-center" style={{ width: 'calc(2 * 2.5rem + 0.5rem)' }}>Initials</div>
-                <div className="w-2 sm:w-4"></div>
-                <div className="flex justify-center items-center" style={{ width: 'calc(2 * 2.5rem + 0.5rem)' }}>Year</div>
-                <div className="w-2 sm:w-4"></div>
-                <div className="flex justify-center items-center" style={{ width: 'calc(2 * 2.5rem + 0.5rem)' }}>College</div>
+            <div className="flex mb-1 sm:mb-2 text-[10px] xs:text-xs sm:text-sm font-bold">
+                <div className="flex-1 flex justify-center">Initials</div>
+                <div className="w-1 sm:w-2"></div>
+                <div className="flex-1 flex justify-center">Year</div>
+                <div className="w-1 sm:w-2"></div>
+                <div className="flex-1 flex justify-center">College</div>
             </div>
 
-            {/* Game Grid */}
-            <div className="flex flex-col gap-2 mb-4">
+            <div className="flex flex-col gap-1 sm:gap-2 mb-2 sm:mb-4">
                 {Array.from({ length: MAX_GUESSES }, (_, rowIndex) => (
-                    <div key={rowIndex} className="flex gap-2">
+                    <div key={rowIndex} className="flex gap-1 sm:gap-2 justify-center">
                         {Array.from({ length: WORD_LENGTH }, (_, colIndex) => {
                             const guess = guesses[rowIndex];
                             const letter = guess ? guess.letters[colIndex] : null;
 
                             let displayChar = '';
-                            let className = 'w-10 h-10 sm:w-14 sm:h-14 md:w-12 md:h-12 flex items-center justify-center text-lg sm:text-xl font-bold border-2 border-gray-300';
+                            let className = 'w-7 h-7 xs:w-8 xs:h-8 sm:w-11 sm:h-11 md:w-13 md:h-13 flex items-center justify-center text-sm sm:text-lg font-bold border-2 border-gray-300';
 
                             if (rowIndex === guesses.length && gameStatus === 'playing') {
                                 displayChar = currentGuess[colIndex] || '';
@@ -319,9 +311,8 @@ const WordleGame: React.FC = () => {
                                 className += ` ${getLetterClass(letter.status)}`;
                             }
 
-                            // Add breaks after 2nd and 4th characters
                             if (colIndex === 1 || colIndex === 3) {
-                                className += ' mr-4';
+                                className += ' mr-2 sm:mr-4';
                             }
 
                             return (
@@ -334,39 +325,30 @@ const WordleGame: React.FC = () => {
                 ))}
             </div>
 
-            {/* Message */}
             {message && (
-                <div className="mb-4 p-2 bg-blue-100 text-blue-800 rounded">
+                <div className="mb-4 p-2 bg-blue-100 text-blue-800 rounded text-sm">
                     {message}
                 </div>
             )}
 
-            {/* Share and Reset Buttons */}
             {gameStatus !== 'playing' && (
                 <div className="mb-4 flex flex-col items-center gap-2">
                     <button
                         onClick={shareResult}
-                        className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded"
+                        className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded text-sm"
                     >
                         Share
                     </button>
-                    {/* <button
-                        onClick={resetGame}
-                        className="px-4 py-2 bg-green-500 text-white hover:bg-green-600 rounded"
-                    >
-                        New Game
-                    </button> */}
                     <div className="text-center">
-                        <h3 className="text-lg font-semibold mb-2">Next Puzzle</h3>
+                        <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2">Next Puzzle</h3>
                         <Countdown targetDate={new Date(new Date().setHours(24, 0, 0, 0)).toISOString()} html={true} />
                     </div>
                 </div>
             )}
 
-            {/* Virtual Keyboard */}
             {gameStatus === 'playing' && (
-                <div className="mb-4">
-                    <div className="flex justify-center mb-2">
+                <div className="mb-2 sm:mb-4 px-1">
+                    <div className="flex flex-wrap justify-center gap-0.5 sm:gap-1 mb-1 sm:mb-2">
                         {'1234567890'.split('').map(digit => {
                             const status = letterStatuses.get(digit) || '';
                             const baseClass = getLetterClass(status);
@@ -374,15 +356,14 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={digit}
                                     onClick={() => handleKeyPress(digit)}
-                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
-                                    disabled={gameStatus !== 'playing'}
+                                    className={`w-6 h-7 sm:w-8 sm:h-9 ${baseClass} rounded text-xs sm:text-sm`}
                                 >
                                     {digit}
                                 </button>
                             );
                         })}
                     </div>
-                    <div className="flex justify-center mb-2">
+                    <div className="flex flex-wrap justify-center gap-0.5 sm:gap-1 mb-1 sm:mb-2">
                         {'QWERTYUIOP'.split('').map(letter => {
                             const status = letterStatuses.get(letter) || '';
                             const baseClass = getLetterClass(status);
@@ -390,15 +371,14 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={letter}
                                     onClick={() => handleKeyPress(letter)}
-                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
-                                    disabled={gameStatus !== 'playing'}
+                                    className={`w-6 h-7 sm:w-8 sm:h-9 ${baseClass} rounded text-xs sm:text-sm`}
                                 >
                                     {letter}
                                 </button>
                             );
                         })}
                     </div>
-                    <div className="flex justify-center mb-2">
+                    <div className="flex flex-wrap justify-center gap-0.5 sm:gap-1 mb-1 sm:mb-2">
                         {'ASDFGHJKL'.split('').map(letter => {
                             const status = letterStatuses.get(letter) || '';
                             const baseClass = getLetterClass(status);
@@ -406,19 +386,17 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={letter}
                                     onClick={() => handleKeyPress(letter)}
-                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
-                                    disabled={gameStatus !== 'playing'}
+                                    className={`w-6 h-7 sm:w-8 sm:h-9 ${baseClass} rounded text-xs sm:text-sm`}
                                 >
                                     {letter}
                                 </button>
                             );
                         })}
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex flex-wrap justify-center gap-0.5 sm:gap-1">
                         <button
                             onClick={() => handleKeyPress('ENTER')}
-                            className="m-1 px-4 py-1 bg-green-500 text-white hover:bg-green-600 rounded"
-                            disabled={gameStatus !== 'playing'}
+                            className="w-10 h-7 sm:w-12 sm:h-9 bg-green-500 text-white hover:bg-green-600 rounded text-xs sm:text-sm"
                         >
                             ENTER
                         </button>
@@ -429,8 +407,7 @@ const WordleGame: React.FC = () => {
                                 <button
                                     key={letter}
                                     onClick={() => handleKeyPress(letter)}
-                                    className={`m-1 px-3 py-2 sm:px-2 sm:py-1 ${baseClass} rounded text-lg sm:text-base`}
-                                    disabled={gameStatus !== 'playing'}
+                                    className={`w-6 h-7 sm:w-8 sm:h-9 ${baseClass} rounded text-xs sm:text-sm`}
                                 >
                                     {letter}
                                 </button>
@@ -438,16 +415,13 @@ const WordleGame: React.FC = () => {
                         })}
                         <button
                             onClick={() => handleKeyPress('BACKSPACE')}
-                            className="m-1 px-2 py-1 bg-red-500 text-white hover:bg-red-600 rounded"
-                            disabled={gameStatus !== 'playing'}
+                            className="w-8 h-7 sm:w-10 sm:h-9 bg-red-500 text-white hover:bg-red-600 rounded text-xs sm:text-sm"
                         >
                             ⌫
                         </button>
                     </div>
                 </div>
             )}
-
-
         </div>
     );
 };

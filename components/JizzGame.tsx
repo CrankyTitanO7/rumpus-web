@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function PowerJumpGame() {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -9,7 +9,7 @@ export default function PowerJumpGame() {
     const [isMobile, setIsMobile] = useState(false);
     const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
     const [isFullscreen, setIsFullscreen] = useState(false);
-    
+
     const width = dimensions.width;
     const height = dimensions.height;
 
@@ -82,7 +82,7 @@ export default function PowerJumpGame() {
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        
+
         birdImgRef.current = new Image();
         birdImgRef.current.src = "/bird.png";
         eyeImgRef.current = new Image();
@@ -91,7 +91,7 @@ export default function PowerJumpGame() {
         bgImgRef.current.src = "/background.png";
         sparkImgRef.current = new Image();
         sparkImgRef.current.src = "/spark.png";
-        
+
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
@@ -473,7 +473,7 @@ export default function PowerJumpGame() {
     return (
         <div className="flex flex-col items-center justify-center p-4 game-container">
             <div className="w-full max-w-full" style={{ maxWidth: isMobile ? '100%' : '820px' }}>
-                <h1 className="text-2xl font-bold mb-3">Jizz Jump</h1>
+                <h1 className="text-2xl font-bold mb-3">Floppy Dick</h1>
 
                 <p className="text-sm mb-4 text-gray-700">
                     Click or press Space to lock the power.
