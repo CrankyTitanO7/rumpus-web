@@ -23,7 +23,6 @@ const collegeAbbreviations: { [key: string]: string } = {
     'Trumbull': 'TR',
 };
 
-//display these on success
 const encouragingMessages = [
     "Congrats, you did it! You know this isn't going on your resume... even this guy ->",
     "You're almost as smart as",
@@ -35,7 +34,6 @@ const encouragingMessages = [
     "excellent job, you alpha male. let out a howl for",
 ];
 
-// display these on failure
 const consolationMessages = [
     "oof. better hope this poor schmuck doesn't see ->",
     "you didn't think of them? ->",
@@ -74,6 +72,11 @@ interface Guess {
     letters: Letter[];
 }
 
+const getTodayString = () => {
+    const now = new Date();
+    return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-${String(now.getUTCDate()).padStart(2, '0')}`;
+};
+
 const WordleGame: React.FC = () => {
     const [yalieData, setYalieData] = useState<YalieData | null>(null);
     const [targetWord, setTargetWord] = useState('');
@@ -93,7 +96,8 @@ const WordleGame: React.FC = () => {
                 setYalieData(yalie);
                 const target = getTargetWord(yalie);
                 setTargetWord(target);
-                localStorage.setItem('wordle-yalie-data', JSON.stringify(yalie));
+                const today = getTodayString();
+                localStorage.setItem(`yalie-${today}`, JSON.stringify(yalie));
             } catch (error) {
                 console.error('Failed to fetch Yalie:', error);
                 setTargetWord('JD24TD');
@@ -107,18 +111,19 @@ const WordleGame: React.FC = () => {
         setLetterStatuses(new Map());
         setRevealingRow(null);
         setRevealingIndex(0);
-        setLastGameDate(new Date().toDateString());
-        localStorage.setItem('wordle-last-game-date', new Date().toDateString());
+        const today = getTodayString();
+        setLastGameDate(today);
+        localStorage.setItem('yurdle-last-game', today);
     };
 
     useEffect(() => {
-        const storedDate = localStorage.getItem('wordle-last-game-date');
-        const today = new Date().toDateString();
+        const storedDate = localStorage.getItem('yurdle-last-game');
+        const today = getTodayString();
 
         if (storedDate !== today) {
             resetGame();
         } else {
-            const storedYalie = localStorage.getItem('wordle-yalie-data');
+            const storedYalie = localStorage.getItem(`yalie-${today}`);
             if (storedYalie) {
                 const yalie = JSON.parse(storedYalie);
                 setYalieData(yalie);
