@@ -292,6 +292,8 @@ const WordleGame: React.FC = () => {
         <div className="flex flex-col items-center p-2 sm:p-4 max-w-[95%] xs:max-w-sm sm:max-w-md mx-auto">
             <h1 className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-4">Yurdle</h1>
             <p className="text-xs sm:text-sm text-center mb-2">Guess the Yalie: Initials + Year + College</p>
+            <p className="text-xs sm:text-sm text-center mb-2">college abbreviation if that wasnt clear</p>
+            <p className="text-xs sm:text-sm text-center mb-2">if this doesnt work, try clearing your browser cache</p>
 
             <div className="flex mb-1 sm:mb-2 text-[10px] xs:text-xs sm:text-sm font-bold">
                 <div className="flex-1 flex justify-center">Initials</div>
