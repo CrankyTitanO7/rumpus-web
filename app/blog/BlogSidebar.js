@@ -45,33 +45,19 @@ export default function BlogSidebar() {
                 >
                     ×
                 </button>
-                <ul>
-                    <li>
-                        <a href="/" onClick={() => setIsOpen(false)}>Home</a>
-                    </li>
-                    <li>
-                        Blog:
-                        <ul>
-                            <li>
-                                <a href="/blog" onClick={() => setIsOpen(false)}>All Posts</a>
-                            </li>
-                            <li>
-                                <a href="#top" onClick={(e) => handleNav(e, "#top")}>
-                                    top of page
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#git" onClick={(e) => setIsOpen(false)}>GitHub Page</a>
-                            </li>
-                            <li>
-                                <a href="#blog" onClick={(e) => setIsOpen(false)}>Official Blog Notes</a>
-                            </li>
-                            <li>
-                                <a href="#commits" onClick={(e) => setIsOpen(false)}>Recent Commits</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                <nav className="sidebar-nav">
+                    <a href="/" className="sidebar-link" onClick={() => setIsOpen(false)}>Home</a>
+                    <div className="sidebar-section">
+                        <span className="sidebar-section-title">Blog</span>
+                        <a href="/blog" className="sidebar-link" onClick={() => setIsOpen(false)}>All Posts</a>
+                        <a href="#top" className="sidebar-link" onClick={(e) => handleNav(e, "#top")}>
+                            Top of Page
+                        </a>
+                        <a href="#git" className="sidebar-link" onClick={(e) => setIsOpen(false)}>GitHub Page</a>
+                        <a href="#blog" className="sidebar-link" onClick={(e) => setIsOpen(false)}>Official Blog Notes</a>
+                        <a href="#commits" className="sidebar-link" onClick={(e) => setIsOpen(false)}>Recent Commits</a>
+                    </div>
+                </nav>
             </aside>
         </>
     );
