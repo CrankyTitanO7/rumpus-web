@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 
-// CACHE FIX: This tells Next.js to cache the result of this function 
-// for 3600 seconds (1 hour) or 86400 (24 hours). 
-// 3600 is usually safer to handle potential errors without locking them in all day.
+// FIX 2: Cache the response for 1 hour (3600 seconds)
+// This ensures that even if the external DB shifts, your app serves the same person to everyone.
 export const revalidate = 3600;
 
 // Simple seeded random number generator for consistent daily selection
@@ -11,12 +10,15 @@ function seededRandom(seed: number): number {
     return x - Math.floor(x);
 }
 
-// Convert date to a numeric seed
+// FIX 1: Force the date to be New York time, regardless of where the server is located
 function getDailySeed(): number {
     const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const day = today.getDate();
+    const nyDateString = today.toLocaleString("en-US", { timeZone: "America/New_York" });
+    const nyDate = new Date(nyDateString);
+    
+    const year = nyDate.getFullYear();
+    const month = nyDate.getMonth() + 1;
+    const day = nyDate.getDate();
     return year * 10000 + month * 100 + day;
 }
 
