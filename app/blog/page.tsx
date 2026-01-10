@@ -138,6 +138,26 @@ export default async function Page() {
                     </h2>
                     <div id="blog-content">
                         <div className="blog-casing">
+                            <h3 className="blog-title">Blog 1/10/26</h3>
+                            <br />
+                            <p className="blog">
+                                greetings rumpasauruses. After another bitchless showerless 5 hours of coding I bring you
+                                yurdle.
+                                yurdle is the wordle by Rumpus. every day the server picks one lucky lucky student to bestow the honor of
+                                being the yurdle answer. We will display their full name graduation year and college.
+                                this person has been chosen.
+                                by yurdle rump-law we hereby declare their deepest darkest dirtiest sexual fantasies to be fulfilled.
+                                bonus points if you send us pictures (they will be posted).
+                                <br />
+                                additional notes. there is NO repetition prevention. you may get chosen twice (you lucky perv).
+                                ts is managed by the Y/CS yalies api. if there be something wrong (ie misspelling, not updating, randomly placed peach emoji
+                                smack dab in the middle of your name)... it is hashtag not my problem. I will say on a real note it is a well managed project.
+                                <br /> there are no easter eggs ! ! ! !
+                                <br />- Coochie Clicker
+                            </p>
+                        </div>
+
+                        <div className="blog-casing">
                             <h3 className="blog-title">Blog 12/30/25</h3>
                             <br />
                             <p className="blog">
