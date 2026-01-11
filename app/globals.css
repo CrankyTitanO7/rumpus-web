@@ -4,15 +4,16 @@
    THEME + BASE STYLES
 ----------------------------------------- */
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    --foreground: #ffffff;
+    --background: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+        --foreground: #0a0a0a;
+        --background: #ededed;
     }
+
 }
 
 html {
@@ -332,6 +333,20 @@ section:nth-of-type(even) {
     background: #ffffff6c;
     overflow: hidden;
     border-radius: 12px;
+}
+
+/* dark mode custom add-on */
+@media (prefers-color-scheme: dark) {
+    .c-rumpus__item {
+        position: sticky;
+        top: 50px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #202330;
+        background: #6060606c;
+        overflow: hidden;
+        border-radius: 12px;
+    }
 }
 
 /* Use JS-driven animation (same as Firefox) for all browsers */

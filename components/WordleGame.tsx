@@ -257,7 +257,7 @@ const WordleGame: React.FC = () => {
             case 'correct': return 'bg-green-500 text-white transition-all duration-300';
             case 'present': return 'bg-yellow-500 text-white transition-all duration-300';
             case 'absent': return 'bg-gray-500 text-white transition-all duration-300';
-            default: return 'bg-white border-2 border-gray-300 transition-all duration-300';
+            default: return 'bg-gray-200 dark:bg-gray-700 text-black dark:text-white border-2 border-gray-400 dark:border-gray-500 transition-all duration-300';
         }
     };
 
@@ -312,7 +312,7 @@ const WordleGame: React.FC = () => {
                             const letter = guess ? guess.letters[colIndex] : null;
 
                             let displayChar = '';
-                            let className = 'w-7 h-7 xs:w-8 xs:h-8 sm:w-11 sm:h-11 md:w-13 md:h-13 flex items-center justify-center text-sm sm:text-lg font-bold border-2 border-gray-300';
+                            let className = 'w-7 h-7 xs:w-8 xs:h-8 sm:w-11 sm:h-11 md:w-13 md:h-13 flex items-center justify-center text-sm sm:text-lg font-bold border-2 border-gray-300 dark:border-gray-600';
 
                             if (rowIndex === guesses.length && gameStatus === 'playing') {
                                 displayChar = currentGuess[colIndex] || '';
