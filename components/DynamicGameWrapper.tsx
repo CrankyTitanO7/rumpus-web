@@ -16,8 +16,11 @@ const DynamicGame2 = dynamic(() => import("@/components/WordleGame"), {
 export default function DynamicGameWrapper() {
     return (
         <>
+            <hr style={{ margin: "20px 0", border: "none", borderTop: "2px solid #ccc" }} />
             <DynamicGame />
+            <hr style={{ margin: "20px 0", border: "none", borderTop: "2px solid #ccc" }} />
             <DynamicGame1 />
+            <hr style={{ margin: "20px 0", border: "none", borderTop: "2px solid #ccc" }} />
             <DynamicGame2 />
         </>
     );
