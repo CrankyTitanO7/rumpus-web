@@ -168,8 +168,7 @@ export default function RumpusHomePage() {
                                                     <a href="/reader">click here for large page viewer!</a>
                                                 </h4>
                                                 <p>
-                                                    Short blurb about this issue — featured article, theme, or notable
-                                                    photos.
+                                                    hey there sexy. read the rumpus.
                                                 </p>
 
                                                 <p>
