@@ -5,14 +5,14 @@ import "./reader.css";
 
 // current issue info
 const reference = {
-    issueurl: "https://online.fliphtml5.com/sesvj/Binder1/", // link to current article viewer
+    issueurl: "https://online.fliphtml5.com/sesvj/Spring-Issue-2026", // link to current article viewer
     pageref: [3], // page numbers for the three iframes
     targetdate: "2025-12-15T15:13:30", // target date for countdown timer
 };
 
 // queue up next issue info
 const referenceNext = {
-    issueurl: "https://online.fliphtml5.com/sesvj/Binder1/", // link to next issue article viewer
+    issueurl: "https://online.fliphtml5.com/sesvj/Spring-Issue-2026", // link to next issue article viewer
     pageref: [3], // page numbers for the three iframes
     targetdate: reference.targetdate, // target date for countdown timer
     // dateform: new Date(reference.targetdate)
