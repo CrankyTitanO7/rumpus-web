@@ -404,7 +404,7 @@ const WordleGame: React.FC = () => {
                     </button>
                     <div className="text-center">
                         <h3 className="text-sm sm:text-lg font-semibold mb-1 sm:mb-2">Next Puzzle</h3>
-                        <Countdown targetDate={new Date(new Date().setHours(24, 0, 0, 0)).toISOString()} html={true} />
+                        <Countdown targetDate={new Date(new Date().setHours(24, 0, 0, 0)).toISOString()} html={true} colorZero="#ff69b4" colorOne="#3c62bc" colorTwo="#FFD700" colorThree="#ff69b4"/>
                     </div>
                 </div>
             )}
