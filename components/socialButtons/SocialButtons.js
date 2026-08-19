@@ -13,13 +13,13 @@ export default function SocialButtons() {
             href: "https://x.com/YaleRumpus",
             brandClass: styles.x,
             icon: "fa-brands fa-twitter",
+            title: "the yale rumpus knows it is now called x"
         },
         {
             id: 3,
-            href: "mailto:yalerumpus@gmail.com",
-            brandClass: styles.gmail,
-            // CHANGED: Uses the Google Brand icon instead of generic envelope
-            icon: "fa-solid fa-envelope",
+            href: "https://www.facebook.com/yalerumpus/",
+            brandClass: styles.facebook,
+            icon: "fa-brands fa-facebook",
         },
     ];
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default function Countdown({ targetDate, html, colorZero, colorOne, colorTwo, colorThree}) {
+export default function Countdown({ targetDate, html, colorZero="alicewhite", colorOne="alicewhite", colorTwo="alicewhite", colorThree="alicewhite"}) {
     const [timeLeft, setTimeLeft] = useState({
         days: 0,
         hours: 0,

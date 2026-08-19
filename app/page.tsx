@@ -1,7 +1,6 @@
 import Image from "next/image";
 import "./globals.css";
 
-import BlobButton from "@/components/BlobButton/BlobButton";
 import SocialButtons from "../components/socialButtons/SocialButtons";
 
 // import Head from 'next/head';
@@ -21,7 +20,7 @@ import DynamicGameWrapper from "@/components/DynamicGameWrapper";
 const reference = {
     issueurl: "https://online.fliphtml5.com/sesvj/Spring-Issue-2026", // link to next issue article viewer
     pageref: [2, 1, 14], // page numbers for the three iframes
-    targetdate: "2026-04-25T20:00:00", // target date for countdown timer
+    targetdate: "2026-09-25T20:00:00", // target date for countdown timer
 };
 
 // IMPORTANT DEVELOPER NOTE: WHEN SPECIFYING TARGET DATE YOU MUST USE 2 DIGIT NUMBERS
@@ -124,28 +123,30 @@ export default function RumpusHomePage() {
                         </figure>
 
                         {/* The sidebar component */}
-                        <Sidebar linkColor ="#ff69b4"/>
+                        <Sidebar linkColor="alicewhite" />
                     </div>
                 </div>
 
                 {/* ---- STACKED CARD SCROLLER ---- */}
                 <section className="c-rumpus">
                     <ul className="c-rumpus__list">
-                        {/* ----------------- CARD 1: COUNTDOWN ----------------- */}
-                        <article className="c-rumpus__item" id="section1">
+                        {/* ----------------- CARD 0: featured ----------------- */}
+                        <article className="c-rumpus__item" id="section0">
                             <div className="c-rumpus__item-figure c-rumpus__gradient-top"></div>
 
                             <div className="c-rumpus__item-info">
-                                <h2 className="c-rumpus__item-title">  
-                                    <span style={{color: "#3c62bc"}}>COUNTDOWN</span> &nbsp;
+                                <h2 className="c-rumpus__item-title">Featured</h2>
+                            </div>
+                        </article>
+                        {/* ----------------- CARD 1: COUNTDOWN ----------------- */}
+                        <article className="c-rumpus__item" id="section1">
+                            <div className="c-rumpus__item-figure c-rumpus__gradient-mid"></div>
 
-                                    <span style={{color: "#FFD700"}}>TO</span> &nbsp;
-                                    
-                                    <span style={{color: "#ff69b4"}}>SPRING FLING:</span> &nbsp;
-                                </h2>
-                                
-                                    <div className="rumpus-countdown-wrap">
-                                    <Countdown targetDate={new Date(endref.targetdate)} html={true} colorZero="#ff69b4" colorOne="#3c62bc" colorTwo="#FFD700" colorThree="#ff69b4" />
+                            <div className="c-rumpus__item-info">
+                                <h2 className="c-rumpus__item-title">Countdown to New Issue:</h2>
+
+                                <div className="rumpus-countdown-wrap">
+                                    <Countdown targetDate={new Date(endref.targetdate)} html={true} />
                                 </div>
                             </div>
                         </article>
@@ -167,9 +168,7 @@ export default function RumpusHomePage() {
                                                 <h4>
                                                     <a href="/reader">click here for large page viewer!</a>
                                                 </h4>
-                                                <p>
-                                                    hey there sexy. read the rumpus.
-                                                </p>
+                                                <p>hey there sexy. read the rumpus.</p>
 
                                                 <p>
                                                     <a
