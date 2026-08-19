@@ -136,6 +136,34 @@ export default function RumpusHomePage() {
 
                             <div className="c-rumpus__item-info">
                                 <h2 className="c-rumpus__item-title">Featured</h2>
+                                <div className="rumpus-top-issues">
+                                    {/* LEFT COLUMN */}
+                                    <div className="rumpus-top-left">
+                                        {/* Top left row */}
+                                        <div className="rumpus-top-row">
+                                            <div className="rumpus-top-blurb"></div>
+
+                                            {/* IFRAME 1 */}
+                                            <div className="bevel-wrap">
+                                                <div style={{ border: "none", height: "290", width: "100%" }}>
+                                                    bottom right{" "}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* IFRAME 3 */}
+                                        <div className="bevel-wrap">
+                                            <div style={{ border: "none", height: "290", width: "100%" }}>
+                                                bottom left
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* RIGHT COLUMN IFRAME */}
+                                    <div className="rumpus-top-right bevel-wrap">
+                                        <div style={{ border: "none", height: "600", width: "100%" }}> right col</div>
+                                    </div>
+                                </div>
                             </div>
                         </article>
                         {/* ----------------- CARD 1: COUNTDOWN ----------------- */}
