@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 
 import SocialButtons from "../components/socialButtons/SocialButtons";
@@ -136,7 +137,7 @@ export default function RumpusHomePage() {
 
                             <div className="c-rumpus__item-info">
                                 <h2 className="c-rumpus__item-title">Featured</h2>
-                                <div className="rumpus-top-issues">
+                                <div className="featured-links">
                                     {/* LEFT COLUMN */}
                                     <div className="rumpus-top-left">
                                         {/* Top left row */}
@@ -146,7 +147,7 @@ export default function RumpusHomePage() {
                                             {/* IFRAME 1 */}
                                             <div className="bevel-wrap">
                                                 <div style={{ border: "none", height: "290", width: "100%" }}>
-                                                    bottom right{" "}
+                                                    <Link href="/surveys">take our survey</Link>
                                                 </div>
                                             </div>
                                         </div>
@@ -154,14 +155,22 @@ export default function RumpusHomePage() {
                                         {/* IFRAME 3 */}
                                         <div className="bevel-wrap">
                                             <div style={{ border: "none", height: "290", width: "100%" }}>
-                                                bottom left
+                                                <Link href="/archive">browse the archive</Link>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* RIGHT COLUMN IFRAME */}
                                     <div className="rumpus-top-right bevel-wrap">
-                                        <div style={{ border: "none", height: "600", width: "100%" }}> right col</div>
+                                        <div style={{ border: "none", height: "600", width: "100%" }}>
+                                            <a
+                                                href="https://www.instagram.com/yale.rumpus"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                follow us on instagram
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
