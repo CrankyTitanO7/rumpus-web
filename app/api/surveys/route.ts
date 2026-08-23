@@ -61,10 +61,21 @@ async function readFile(
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`GitHub read failed for ${path} (${res.status})`);
     const json = await res.json();
-    return {
-        content: JSON.parse(Buffer.from(json.content, 'base64').toString('utf8')),
-        sha: json.sha,
-    };
+
+    // Contents API returns empty content for 0-byte files and for files over 1MB
+    if (!json.content || json.encoding === 'none') {
+        if (json.size === 0) return { content: null, sha: json.sha };
+        throw new Error(`${path} exceeds the 1MB Contents API limit (${json.size} bytes)`);
+    }
+
+    const raw = Buffer.from(json.content, 'base64').toString('utf8');
+    if (raw.trim().length === 0) return { content: null, sha: json.sha };
+
+    try {
+        return { content: JSON.parse(raw), sha: json.sha };
+    } catch {
+        throw new Error(`${path} does not contain valid JSON`);
+    }
 }
 
 async function writeFile(

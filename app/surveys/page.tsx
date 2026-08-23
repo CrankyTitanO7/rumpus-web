@@ -89,6 +89,7 @@ function getVoted(): Set<string> {
 }
 
 let votedSnapshot: Set<string> | null = null;
+const EMPTY_VOTED: Set<string> = new Set();
 
 function subscribeVoted(cb: () => void) {
     window.addEventListener("rumpus-voted", cb);
@@ -117,17 +118,30 @@ export default function SurveysPage() {
     const [results, setResults] = useState<Results>({});
     const [live, setLive] = useState(false); // true if backend responded
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const voted = useSyncExternalStore(subscribeVoted, getVotedSnapshot, () => new Set<string>());
+    const voted = useSyncExternalStore(
+        subscribeVoted,
+        getVotedSnapshot,
+        () => EMPTY_VOTED
+    );
     const [answers, setAnswers] = useState<Record<string, number[]>>({});
     const [texts, setTexts] = useState<Record<string, string>>({});
     const [hp, setHp] = useState(""); // honeypot: humans never see this field
     const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+    const [notice, setNotice] = useState<{ kind: "info" | "ok" | "error"; text: string } | null>(
+        null
+    );
 
     useEffect(() => {
         (async () => {
             try {
                 const res = await fetch("/api/surveys");
-                if (!res.ok) return;
+                if (!res.ok) {
+                    setNotice({
+                        kind: "info",
+                        text: "live survey data unavailable right now — showing sample surveys.",
+                    });
+                    return;
+                }
                 const data = await res.json();
                 if (Array.isArray(data.surveys) && data.surveys.length > 0) {
                     setSurveys(data.surveys);
@@ -136,6 +150,10 @@ export default function SurveysPage() {
                 }
             } catch {
                 // no backend yet: stay on fallback data
+                setNotice({
+                    kind: "info",
+                    text: "live survey data unavailable right now — showing sample surveys.",
+                });
             }
         })();
     }, []);
