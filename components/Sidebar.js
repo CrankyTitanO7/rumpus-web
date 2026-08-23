@@ -141,6 +141,9 @@ export default function Sidebar({ linkColor }) {
                         <Link href="/blog">Blog</Link>
                     </li>
                     <li>
+                        <Link href="/surveys">Surveys</Link>
+                    </li>
+                    <li>
                         <Link href="/yalies-ranking">the Yankings</Link>
                     </li>
                 </ul>
@@ -203,6 +206,9 @@ export default function Sidebar({ linkColor }) {
                             </li>
                             <li>
                                 <Link href="/blog">Blog</Link>
+                            </li>
+                            <li>
+                                <Link href="/surveys">Surveys</Link>
                             </li>
                             <li>
                                 <Link href="/yalies-ranking">the Yankings</Link>
