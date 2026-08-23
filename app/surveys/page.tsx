@@ -352,7 +352,7 @@ export default function SurveysPage() {
                             <h3>bug report</h3>
                             <p className="blurb">click here to be redirected to our bug report page</p>
                         </div>
-                        <a href="/blog">
+                        <a href="/about">
                             <button className="btn">go to bug report page</button>
                         </a>
                     </article>
