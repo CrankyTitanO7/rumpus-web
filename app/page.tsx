@@ -138,40 +138,15 @@ export default function RumpusHomePage() {
                             <div className="c-rumpus__item-info">
                                 <h2 className="c-rumpus__item-title">Featured</h2>
                                 <div className="featured-links">
-                                    {/* LEFT COLUMN */}
-                                    <div className="rumpus-top-left">
-                                        {/* Top left row */}
-                                        <div className="rumpus-top-row">
-                                            <div className="rumpus-top-blurb"></div>
-
-                                            {/* IFRAME 1 */}
-                                            <div className="bevel-wrap">
-                                                <div style={{ border: "none", height: "290", width: "100%" }}>
-                                                    <Link href="/surveys">take our survey</Link>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* IFRAME 3 */}
-                                        <div className="bevel-wrap">
-                                            <div style={{ border: "none", height: "290", width: "100%" }}>
-                                                <Link href="/archive">browse the archive</Link>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* RIGHT COLUMN IFRAME */}
-                                    <div className="rumpus-top-right bevel-wrap">
-                                        <div style={{ border: "none", height: "600", width: "100%" }}>
-                                            <a
-                                                href="https://www.instagram.com/yale.rumpus"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                follow us on instagram
-                                            </a>
-                                        </div>
-                                    </div>
+                                    <Link href="/surveys">take our survey</Link>
+                                    <Link href="/archive">browse the archive</Link>
+                                    <a
+                                        href="https://www.instagram.com/yale.rumpus"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        follow us on instagram
+                                    </a>
                                 </div>
                             </div>
                         </article>
