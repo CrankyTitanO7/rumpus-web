@@ -9,54 +9,33 @@ export default async function Page() {
     const repo = await fetchRepoDetails();
 
     // Formatting the date for the card
-    const lastUpdated = repo
-        ? new Date(repo.updated_at).toLocaleDateString()
-        : "Recently";
+    const lastUpdated = repo ? new Date(repo.updated_at).toLocaleDateString() : "Recently";
 
     return (
         <>
-            <main
-                className="top blog-main"
-                id="top"
-            >
+            <main className="top blog-main" id="top">
                 <div className="frosted-card">
-                    <h1
-                        className="blog-title-main"
-                    >
-                        blog
-                    </h1>
+                    <h1 className="blog-title-main">blog</h1>
                     <p className="blog-intro">
-                        Hello, and welcome to our blog! We are excited to share our
-                        latest updates and insights with you. We will try to updates
-                        you with new content on a regular basis, so please check
-                        back often to see what's new. We hope you enjoy reading our
-                        blog and find it informative and engaging.
+                        Hello, and welcome to our blog! We are excited to share our latest updates and insights with
+                        you. We will try to updates you with new content on a regular basis, so please check back often
+                        to see what's new. We hope you enjoy reading our blog and find it informative and engaging.
                     </p>
                     <p className="blog-intro">
-                        Feel free to leave your{" "}
-                        <a
-                            href="/about"
-                        >
-                            comments and feedback{" "}
-                        </a>
-                        on our website. We value your input and are always looking
-                        for ways to improve our content. Thank you for visiting our
-                        blog, and we look forward to seeing you again soon!
+                        Feel free to leave your <a href="/about">comments and feedback </a>
+                        on our website. We value your input and are always looking for ways to improve our content.
+                        Thank you for visiting our blog, and we look forward to seeing you again soon!
                     </p>
                 </div>
 
                 <div className="frosted-card">
-                    <h2
-                        className="git"
-                        id="git"
-                    >
+                    <h2 className="git" id="git">
                         Github Page
                     </h2>
                     <p className="github-desc">
-                        Check out our GitHub page to see the latest updates and
-                        contributions from our team. We are always working on new
-                        features and improvements, so be sure to follow us for the
-                        latest news and developments.
+                        Check out our GitHub page to see the latest updates and contributions from our team. We are
+                        always working on new features and improvements, so be sure to follow us for the latest news and
+                        developments.
                     </p>
 
                     {/* GitHub Preview Card with Dynamic Stats */}
@@ -71,14 +50,8 @@ export default async function Page() {
                             alt="GitHub Logo"
                         />
                         <div className="github-stats">
-                            <div
-                                className="repo-name"
-                            >
-                                yale-rumpus / rumpus-web
-                            </div>
-                            <div
-                                className="repo-meta"
-                            >
+                            <div className="repo-name">yale-rumpus / rumpus-web</div>
+                            <div className="repo-meta">
                                 {repo
                                     ? `⭐ ${repo.stargazers_count} stars • Updated ${lastUpdated}`
                                     : "View repository on GitHub"}
@@ -88,10 +61,7 @@ export default async function Page() {
                 </div>
 
                 <div className="frosted-card blog-section">
-                    <h2
-                        className="blog"
-                        id="blog"
-                    >
+                    <h2 className="blog" id="blog">
                         Official Blog Notes
                     </h2>
                     <div id="blog-content">
@@ -107,7 +77,7 @@ export default async function Page() {
                             <h3 className="blog-title">future incoming features</h3>
                             <br />
                             <p className="blog">
-                                Archives
+                                no new features announced yet! check back in soon though, we're very spontaneous
                                 <br />
                             </p>
                         </div>
