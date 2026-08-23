@@ -356,6 +356,7 @@ export default function SurveysPage() {
                             <button className="btn">go to bug report page</button>
                         </a>
                     </article>
+                    <p>hint: if it says you already responded, but you want to respond again, clean your cookies</p>
                 </section>
             )}
 
