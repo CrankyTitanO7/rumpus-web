@@ -15,20 +15,25 @@ interface SurveyDef {
     questions: SurveyQuestion[];
 }
 
-interface StoredAnswer {
-    questionId: string;
-    choice: number | null;
-    multi?: number[];
-    text?: string;
+// responses/<surveyId>.json shape:
+// { "_total": 17,
+//   "hours": { "2026-08-22T21": 5 },                      // UTC hour -> votes
+//   "tally": { "<questionId>": { "<option text>": 9 } },  // quantitative counts
+//   "texts": { "<questionId>": ["answer", "..."] } }      // free-text archive
+interface StoredTally {
+    _total: number;
+    hours: Record<string, number>;
+    tally: Record<string, Record<string, number>>;
+    texts: Record<string, string[]>;
 }
 
-interface StoredResponse {
-    answers: StoredAnswer[];
-    ts: number;
-}
-
-const GH_API = 'https://api.github.com';
 const SURVEYS_PATH = 'surveys.json';
+const MAX_TEXTS_PER_QUESTION = 500;
+const MAX_FILE_CHARS = 900_000;
+
+function ghBase() {
+    return process.env.GITHUB_API_BASE || 'https://api.github.com';
+}
 
 function getEnv() {
     const token = process.env.SURVEYS_GITHUB_TOKEN ?? process.env.VOTES_GITHUB_TOKEN;
@@ -54,7 +59,7 @@ async function readFile(
     token: string,
     path: string
 ): Promise<{ content: unknown; sha?: string } | null> {
-    const res = await fetch(`${GH_API}/repos/${repo}/contents/${encodeURIComponent(path)}`, {
+    const res = await fetch(`${ghBase()}/repos/${repo}/contents/${encodeURIComponent(path)}`, {
         headers: ghHeaders(token),
         cache: 'no-store',
     });
@@ -86,7 +91,7 @@ async function writeFile(
     sha: string | undefined,
     message: string
 ): Promise<number> {
-    const res = await fetch(`${GH_API}/repos/${repo}/contents/${encodeURIComponent(path)}`, {
+    const res = await fetch(`${ghBase()}/repos/${repo}/contents/${encodeURIComponent(path)}`, {
         method: 'PUT',
         headers: { ...ghHeaders(token), 'Content-Type': 'application/json' },
         cache: 'no-store',
@@ -113,12 +118,64 @@ function rateLimited(ip: string) {
 }
 
 function asSurveys(value: unknown): SurveyDef[] {
-    if (value && typeof value === 'object' && Array.isArray((value as { surveys?: unknown }).surveys)) {
+    if (
+        value &&
+        typeof value === 'object' &&
+        Array.isArray((value as { surveys?: unknown }).surveys)
+    ) {
         return (value as { surveys: SurveyDef[] }).surveys.filter(
             (s) => s && typeof s.id === 'string' && Array.isArray(s.questions)
         );
     }
     return [];
+}
+
+function emptyTally(): StoredTally {
+    return { _total: 0, hours: {}, tally: {}, texts: {} };
+}
+
+function asStoredTally(value: unknown): StoredTally {
+    const out = emptyTally();
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return out;
+    const v = value as Record<string, unknown>;
+    if (typeof v._total === 'number') out._total = v._total;
+    if (v.hours && typeof v.hours === 'object' && !Array.isArray(v.hours)) {
+        for (const [k, n] of Object.entries(v.hours as Record<string, unknown>)) {
+            if (typeof n === 'number') out.hours[k] = n;
+        }
+    }
+    if (v.tally && typeof v.tally === 'object' && !Array.isArray(v.tally)) {
+        for (const [qid, opts] of Object.entries(v.tally as Record<string, unknown>)) {
+            if (opts && typeof opts === 'object' && !Array.isArray(opts)) {
+                const bucket: Record<string, number> = {};
+                for (const [opt, n] of Object.entries(opts as Record<string, unknown>)) {
+                    if (typeof n === 'number') bucket[opt] = n;
+                }
+                out.tally[qid] = bucket;
+            }
+        }
+    }
+    if (v.texts && typeof v.texts === 'object' && !Array.isArray(v.texts)) {
+        for (const [qid, arr] of Object.entries(v.texts as Record<string, unknown>)) {
+            if (Array.isArray(arr)) {
+                out.texts[qid] = arr.filter((t): t is string => typeof t === 'string');
+            }
+        }
+    }
+    return out;
+}
+
+// map stored option-text keys back to "<questionId>:<index>" keys for the client
+function toPublicResults(survey: SurveyDef, stored: StoredTally): Record<string, number> {
+    const out: Record<string, number> = { _total: stored._total };
+    for (const q of survey.questions) {
+        if (q.type === 'text') continue;
+        const byText = stored.tally[q.id] || {};
+        q.options.forEach((optText, i) => {
+            out[`${q.id}:${i}`] = byText[optText] || 0;
+        });
+    }
+    return out;
 }
 
 export async function GET() {
@@ -132,27 +189,8 @@ export async function GET() {
             surveys.map(async (survey) => {
                 try {
                     const file = await readFile(repo, token, `responses/${survey.id}.json`);
-                    const list: StoredResponse[] = Array.isArray(file?.content)
-                        ? (file!.content as StoredResponse[])
-                        : [];
-                    const tally: Record<string, number> = { _total: list.length };
-                    for (const r of list) {
-                        for (const a of r.answers || []) {
-                            if (typeof a.choice === 'number' && a.choice >= 0) {
-                                const key = `${a.questionId}:${a.choice}`;
-                                tally[key] = (tally[key] || 0) + 1;
-                            } else if (Array.isArray(a.multi)) {
-                                for (const i of a.multi) {
-                                    const key = `${a.questionId}:${i}`;
-                                    tally[key] = (tally[key] || 0) + 1;
-                                }
-                            } else if (typeof a.text === 'string' && a.text.length > 0) {
-                                const key = `${a.questionId}:__text`;
-                                tally[key] = (tally[key] || 0) + 1;
-                            }
-                        }
-                    }
-                    results[survey.id] = tally;
+                    const stored = asStoredTally(file?.content ?? null);
+                    results[survey.id] = toPublicResults(survey, stored);
                 } catch (err) {
                     console.error(`surveys GET tally failed for ${survey.id}:`, err);
                 }
@@ -207,46 +245,61 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'bad request' }, { status: 400 });
         }
 
-        const clean: StoredAnswer[] = survey.questions.map((q, idx) => {
-            const raw = (answers[idx] || {}) as Record<string, unknown>;
-            const clampIndex = (n: unknown) =>
-                typeof n === 'number' && Number.isInteger(n) && n >= 0 && n < q.options.length
-                    ? n
-                    : -1;
-
-            if (q.type === 'text') {
-                return {
-                    questionId: q.id,
-                    choice: null,
-                    text: String(raw.text ?? '')
-                        .trim()
-                        .slice(0, 2000),
-                };
-            }
-            if (q.type === 'multi') {
-                const multi = Array.isArray(raw.multi)
-                    ? [...new Set((raw.multi as unknown[]).map(clampIndex).filter((n) => n >= 0))]
-                    : [];
-                return { questionId: q.id, choice: null, multi };
-            }
-            const choice = clampIndex(raw.choice);
-            return { questionId: q.id, choice: choice >= 0 ? choice : null };
-        });
-
         const path = `responses/${surveyId}.json`;
         for (let attempt = 0; attempt < 3; attempt++) {
             const existing = await readFile(repo, token, path);
-            const list: StoredResponse[] =
-                existing && Array.isArray(existing.content)
-                    ? (existing.content as StoredResponse[])
-                    : [];
-            list.push({ answers: clean, ts: Date.now() });
+            const stored = asStoredTally(existing?.content ?? null);
+
+            for (let qi = 0; qi < survey.questions.length; qi++) {
+                const q = survey.questions[qi];
+                const raw = (answers[qi] || {}) as Record<string, unknown>;
+                const clampIndex = (n: unknown) =>
+                    typeof n === 'number' && Number.isInteger(n) && n >= 0 && n < q.options.length
+                        ? n
+                        : -1;
+
+                if (q.type === 'text') {
+                    const text = String(raw.text ?? '')
+                        .trim()
+                        .slice(0, 2000);
+                    if (text) {
+                        const list = stored.texts[q.id] || [];
+                        if (list.length < MAX_TEXTS_PER_QUESTION) list.push(text);
+                        stored.texts[q.id] = list;
+                    }
+                    continue;
+                }
+
+                const indices =
+                    q.type === 'multi'
+                        ? [
+                              ...new Set(
+                                  (Array.isArray(raw.multi) ? raw.multi : []).map(clampIndex)
+                              ),
+                          ].filter((n) => n >= 0)
+                        : [clampIndex(raw.choice)].filter((n) => n >= 0);
+
+                for (const i of indices) {
+                    const optText = q.options[i];
+                    const bucket = (stored.tally[q.id] ||= {});
+                    bucket[optText] = (bucket[optText] || 0) + 1;
+                }
+            }
+
+            stored._total += 1;
+            const hourKey = new Date().toISOString().slice(0, 13);
+            stored.hours[hourKey] = (stored.hours[hourKey] || 0) + 1;
+
+            const serialized = JSON.stringify(stored, null, 2);
+            if (serialized.length > MAX_FILE_CHARS) {
+                throw new Error(`${path} exceeds safe storage size (${serialized.length} chars)`);
+            }
 
             const status = await writeFile(
                 repo,
                 token,
                 path,
-                list,
+                stored,
                 existing?.sha,
                 `survey response: ${surveyId}`
             );

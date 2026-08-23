@@ -45,22 +45,17 @@ export default function Sidebar({ linkColor }) {
                 {(() => {
                     // headlines here!
                     const headlines = [
-                        "Zara Larsson at Spring Fling btw",
-                        "\"own less stuff\" - pericles lewis",
-                        "breaking: another 14 deans resign - more at 11",
                         "find epstein files at jmail.world",
                         "who even reads these??",
-                        "\"I killed the performance and then you killed it after the performance purrrrrr.\"-zara larsson",
-                        "",
+                        "you've reached the rumpus",
+                        "play our games!",
                     ];
+                    // here are the links that you can click on for each headline item
                     const links = [
-                        "",
-                        "https://yaledailynews.com/articles/yale-college-ending-summer-storage-funding-for-low-income-students",
-                        "https://yaledailynews.com/articles/three-more-residential-college-deans-to-leave-roles-amid-reshuffling",
                         "https://jmail.world/",
                         "",
-                        "https://www.syracuse.com/celebrity-news/2026/04/popular-singer-loses-3-million-brand-deal-over-abortion-joke.html",
                         "",
+                        "#section4",
                     ]
 
                     return (

@@ -197,16 +197,39 @@ export default function SurveysPage() {
             })),
         };
         try {
-            await fetch("/api/surveys", {
+            const res = await fetch("/api/surveys", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
+            if (res.ok) {
+                markVoted(survey.id);
+                setStatus("done");
+                setNotice({ kind: "ok", text: "response saved — thanks for voting." });
+            } else if (res.status === 429) {
+                setStatus("idle");
+                setNotice({
+                    kind: "error",
+                    text: "easy there — too many submissions. try again in a few seconds.",
+                });
+                return;
+            } else {
+                markVoted(survey.id);
+                setStatus("done");
+                setNotice({
+                    kind: "error",
+                    text: `couldn't save your response (server said ${res.status}) — your picks are kept on this device only.`,
+                });
+            }
         } catch {
-            // still record locally so UX isn't blocked pre-backend
+            // backend unreachable: record locally so the UX isn't blocked
+            markVoted(survey.id);
+            setStatus("done");
+            setNotice({
+                kind: "error",
+                text: "network hiccup — your picks are kept on this device only.",
+            });
         }
-        markVoted(survey.id);
-        setStatus("done");
 
         // refresh tallies if backend is live
         if (live) {
@@ -323,6 +346,20 @@ export default function SurveysPage() {
                     ← back home
                 </Link>
             </header>
+
+            {notice && (
+                <div className={`card notice ${notice.kind}`} role="status">
+                    <span>{notice.text}</span>
+                    <button
+                        type="button"
+                        className="notice-x"
+                        aria-label="dismiss"
+                        onClick={() => setNotice(null)}
+                    >
+                        ×
+                    </button>
+                </div>
+            )}
 
             {!selected && (
                 <section className="survey-list">
