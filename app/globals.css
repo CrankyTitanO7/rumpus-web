@@ -6,22 +6,25 @@
 :root {
     --foreground: #ffffff;
     --background: #171717;
+    --accent: #b36f6f;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --foreground: #0a0a0a;
         --background: #ededed;
+        --accent:#982424;
     }
 }
 
 html {
     margin: 0;
-    background: #500a0a;
-    background-image: url(../public/decal.png);
+    /* background: #500a0a; */
+    /* background-image: url(../public/decal.png); */
+    background-image: linear-gradient(var(--accent), var(--background));
     /* font-family: Arial, Helvetica, sans-serif; */
     text-align: center;
-    color: var(--background);
+    color: var(--foreground);
     scroll-behavior: smooth;
     background-attachment: fixed;
     background-position: center center;
@@ -342,8 +345,8 @@ section:nth-of-type(even) {
         top: 50px;
         display: flex;
         flex-direction: column;
-        border: 1px solid #202330;
-        background: #6060606c;
+        border: 1px solid #441a1a;
+        background: #c367676c;
         overflow: hidden;
         border-radius: 12px;
         margin: 20px 0;

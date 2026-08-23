@@ -221,7 +221,7 @@ export default function Sidebar({ linkColor }) {
           left: 12px;
           right: 12px;
           width: auto;
-          background-image: linear-gradient(to bottom, #ffffff3b, #230909);
+          background-image: linear-gradient(to bottom, #af0f0f3b, #230909);
           padding: 12px 20px;
           z-index: 999;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -264,7 +264,7 @@ export default function Sidebar({ linkColor }) {
         }
 
         .topbar a:hover {
-          color: #ddd;
+          color: #f8b3b3;
         }
         
         /* Mobile: enable text wrapping for topbar */
