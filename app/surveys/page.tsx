@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import "./surveys.css";
 
 type QuestionType = "single" | "multi" | "text";
@@ -28,29 +28,10 @@ const VOTED_KEY = "rumpus-surveys-voted";
 
 const FALLBACK_SURVEYS: Survey[] = [
     {
-        id: "spring-fling-2027",
-        title: "Spring Fling 2027 headliner",
-        blurb: "dream big. delusional picks encouraged.",
-        closes: "2026-12-31",
-        questions: [
-            {
-                id: "q1",
-                text: "who should headline spring fling 2027?",
-                type: "single",
-                options: [
-                    "zara larsson (again)",
-                    "charli xcx",
-                    "a band made entirely of TFs",
-                    "the shubert theater organist",
-                ],
-            },
-        ],
-    },
-    {
         id: "dining-halls",
         title: "dining hall supremacy",
         blurb: "settle this once and for all.",
-        closes: "2026-12-31",
+        closes: "12/31/2026",
         questions: [
             {
                 id: "q1",
@@ -62,16 +43,25 @@ const FALLBACK_SURVEYS: Survey[] = [
                 id: "q2",
                 text: "what should the dining halls bring back? (pick any)",
                 type: "multi",
-                options: [
-                    "chicken nugget day",
-                    "soft serve machines",
-                    "waffle fries",
-                    "the panini press renaissance",
-                ],
+                options: ["chicken nugget day", "soft serve machines", "waffle fries", "the panini press renaissance"],
             },
             {
                 id: "q3",
                 text: "dining hall horror stories / confessions (anonymous)",
+                type: "text",
+                options: [],
+            },
+        ],
+    },
+    {
+        id: "gossip",
+        title: "if you hear something...",
+        blurb: ".. say something. we won't tell",
+        closes: "never",
+        questions: [
+            {
+                id: "q1",
+                text: "confessions (anonymous)",
                 type: "text",
                 options: [],
             },
@@ -118,18 +108,12 @@ export default function SurveysPage() {
     const [results, setResults] = useState<Results>({});
     const [live, setLive] = useState(false); // true if backend responded
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const voted = useSyncExternalStore(
-        subscribeVoted,
-        getVotedSnapshot,
-        () => EMPTY_VOTED
-    );
+    const voted = useSyncExternalStore(subscribeVoted, getVotedSnapshot, () => EMPTY_VOTED);
     const [answers, setAnswers] = useState<Record<string, number[]>>({});
     const [texts, setTexts] = useState<Record<string, string>>({});
     const [hp, setHp] = useState(""); // honeypot: humans never see this field
     const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
-    const [notice, setNotice] = useState<{ kind: "info" | "ok" | "error"; text: string } | null>(
-        null
-    );
+    const [notice, setNotice] = useState<{ kind: "info" | "ok" | "error"; text: string } | null>(null);
 
     useEffect(() => {
         (async () => {
@@ -158,7 +142,7 @@ export default function SurveysPage() {
         })();
     }, []);
 
-    const selected = surveys.find((s) => s.id === selectedId) || null;
+    const selected = surveys.find(s => s.id === selectedId) || null;
 
     function tallyFor(surveyId: string) {
         const tally = results[surveyId] || {};
@@ -172,14 +156,12 @@ export default function SurveysPage() {
     }
 
     function toggleChoice(question: SurveyQuestion, index: number) {
-        setAnswers((prev) => {
+        setAnswers(prev => {
             const cur = prev[question.id] || [];
             if (question.type === "single") {
                 return { ...prev, [question.id]: [index] };
             }
-            const next = cur.includes(index)
-                ? cur.filter((i) => i !== index)
-                : [...cur, index];
+            const next = cur.includes(index) ? cur.filter(i => i !== index) : [...cur, index];
             return { ...prev, [question.id]: next };
         });
     }
@@ -189,9 +171,9 @@ export default function SurveysPage() {
         const payload = {
             surveyId: survey.id,
             hp,
-            answers: survey.questions.map((q) => ({
+            answers: survey.questions.map(q => ({
                 questionId: q.id,
-                choice: q.type === "text" ? null : (answers[q.id] || [])[0] ?? -1,
+                choice: q.type === "text" ? null : ((answers[q.id] || [])[0] ?? -1),
                 multi: q.type === "multi" ? answers[q.id] || [] : undefined,
                 text: q.type === "text" ? texts[q.id]?.slice(0, 2000) : undefined,
             })),
@@ -249,14 +231,13 @@ export default function SurveysPage() {
                 <div className="results">
                     <h4>results {live ? "(live)" : "(totals coming soon)"}</h4>
                     {survey.questions
-                        .filter((q) => q.type !== "text")
-                        .map((q) => (
+                        .filter(q => q.type !== "text")
+                        .map(q => (
                             <div key={q.id} className="result-q">
                                 <p className="result-q-text">{q.text}</p>
                                 {q.options.map((opt, i) => {
                                     const count = tally[optionKey(q.id, i)] || 0;
-                                    const pct =
-                                        total > 0 ? Math.round((count / total) * 100) : 0;
+                                    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
                                     return (
                                         <div key={i} className="bar-row">
                                             <span className="bar-label">{opt}</span>
@@ -279,12 +260,12 @@ export default function SurveysPage() {
         return (
             <form
                 className="ballot"
-                onSubmit={(e) => {
+                onSubmit={e => {
                     e.preventDefault();
                     submitSurvey(survey);
                 }}
             >
-                {survey.questions.map((q) => (
+                {survey.questions.map(q => (
                     <fieldset key={q.id}>
                         <legend>{q.text}</legend>
                         {q.type === "text" ? (
@@ -292,18 +273,13 @@ export default function SurveysPage() {
                                 value={texts[q.id] || ""}
                                 maxLength={2000}
                                 placeholder="spill."
-                                onChange={(e) =>
-                                    setTexts((prev) => ({ ...prev, [q.id]: e.target.value }))
-                                }
+                                onChange={e => setTexts(prev => ({ ...prev, [q.id]: e.target.value }))}
                             />
                         ) : (
                             q.options.map((opt, i) => {
                                 const checked = (answers[q.id] || []).includes(i);
                                 return (
-                                    <label
-                                        key={i}
-                                        className={`opt ${checked ? "selected" : ""}`}
-                                    >
+                                    <label key={i} className={`opt ${checked ? "selected" : ""}`}>
                                         <input
                                             type={q.type === "multi" ? "checkbox" : "radio"}
                                             name={`${survey.id}-${q.id}`}
@@ -325,7 +301,7 @@ export default function SurveysPage() {
                     aria-hidden="true"
                     className="hp-field"
                     value={hp}
-                    onChange={(e) => setHp(e.target.value)}
+                    onChange={e => setHp(e.target.value)}
                 />
                 <button className="btn" type="submit" disabled={status === "sending"}>
                     {status === "sending" ? "sending..." : "submit"}
@@ -338,10 +314,7 @@ export default function SurveysPage() {
         <main className="page">
             <header className="card hero">
                 <h1>rumpus surveys</h1>
-                <p>
-                    the only news at Yale about stuff at Yale, now asking YOU about stuff at
-                    Yale.
-                </p>
+                <p>the only news at Yale about stuff at Yale, now asking YOU about stuff at Yale.</p>
                 <Link href="/" className="home-link">
                     ← back home
                 </Link>
@@ -350,12 +323,7 @@ export default function SurveysPage() {
             {notice && (
                 <div className={`card notice ${notice.kind}`} role="status">
                     <span>{notice.text}</span>
-                    <button
-                        type="button"
-                        className="notice-x"
-                        aria-label="dismiss"
-                        onClick={() => setNotice(null)}
-                    >
+                    <button type="button" className="notice-x" aria-label="dismiss" onClick={() => setNotice(null)}>
                         ×
                     </button>
                 </div>
@@ -363,7 +331,7 @@ export default function SurveysPage() {
 
             {!selected && (
                 <section className="survey-list">
-                    {surveys.map((s) => (
+                    {surveys.map(s => (
                         <article key={s.id} className="card survey-card">
                             <div>
                                 <h3>{s.title}</h3>
@@ -379,6 +347,15 @@ export default function SurveysPage() {
                             </button>
                         </article>
                     ))}
+                    <article key="bug" className="card survey-card">
+                        <div>
+                            <h3>bug report</h3>
+                            <p className="blurb">click here to be redirected to our bug report page</p>
+                        </div>
+                        <a href="/blog">
+                            <button className="btn">go to bug report page</button>
+                        </a>
+                    </article>
                 </section>
             )}
 

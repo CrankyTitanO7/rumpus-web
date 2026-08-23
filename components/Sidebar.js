@@ -14,7 +14,7 @@ export default function Sidebar({ linkColor }) {
             ([entry]) => {
                 setHeaderVisible(entry.isIntersecting);
             },
-            { threshold: 0 }
+            { threshold: 0 },
         );
 
         // Get the header element (id="top")
@@ -51,27 +51,23 @@ export default function Sidebar({ linkColor }) {
                         "play our games!",
                     ];
                     // here are the links that you can click on for each headline item
-                    const links = [
-                        "https://jmail.world/",
-                        "",
-                        "",
-                        "#section4",
-                    ]
+                    const links = ["https://jmail.world/", "", "", "#section4"];
 
                     return (
-                        <div
-                            className="scrolling-headlines"
-                            aria-label="Latest headlines"
-                            role="region"
-                        >
+                        <div className="scrolling-headlines" aria-label="Latest headlines" role="region">
                             <div className="ticker">
                                 <div className="ticker-track">
                                     {headlines.concat(headlines).map((h, i) => {
                                         const url = links[i % links.length];
                                         return (
                                             <span className="ticker-item" key={i}>
-                                                <a href={url || undefined} target={url ? "_blank" : undefined} rel={url ? "noopener noreferrer" : undefined} style={{color:linkColor}}>
-                                                {h}
+                                                <a
+                                                    href={url || undefined}
+                                                    target={url ? "_blank" : undefined}
+                                                    rel={url ? "noopener noreferrer" : undefined}
+                                                    style={{ color: linkColor }}
+                                                >
+                                                    {h}
                                                 </a>
                                             </span>
                                         );
@@ -94,38 +90,25 @@ export default function Sidebar({ linkColor }) {
                 })()}
                 <ul>
                     <li>
-                        <a href="#top" onClick={(e) => handleNav(e, "#top")}>
+                        <a href="#top" onClick={e => handleNav(e, "#top")}>
                             top of page
                         </a>
                     </li>
                     <li>
-                        <a
-                            href="#section1"
-                            onClick={(e) => handleNav(e, "#section1")}
-                        >
+                        <a href="#section1" onClick={e => handleNav(e, "#section1")}>
                             Countdown
                         </a>
                     </li>
                     <li>
-                        <a
-                            href="#section2"
-                            onClick={(e) => handleNav(e, "#section2")}
-                        >
+                        <a href="#section2" onClick={e => handleNav(e, "#section2")}>
                             Latest Issue
                         </a>
                     </li>
                     <li>
-                        <a
-                            href="/archive"
-                        >
-                            Past Issues
-                        </a>
+                        <a href="/archive">Past Issues</a>
                     </li>
                     <li>
-                        <a
-                            href="#section4"
-                            onClick={(e) => handleNav(e, "#section4")}
-                        >
+                        <a href="#section4" onClick={e => handleNav(e, "#section4")}>
                             Games
                         </a>
                     </li>
@@ -138,50 +121,33 @@ export default function Sidebar({ linkColor }) {
                     <li>
                         <Link href="/surveys">Surveys</Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link href="/yalies-ranking">the Yankings</Link>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
 
             {/* Side sidebar (visible when header is NOT visible) */}
             {!headerVisible && (
-                <div
-                    className="sidebar-wrapper"
-                    onMouseEnter={() => setOpen(true)}
-                    onMouseLeave={() => setOpen(false)}
-                >
-                    <button
-                        className="sidebar-handle"
-                        aria-label="Open sidebar"
-                        style={{ top: "10px" }}
-                    >
+                <div className="sidebar-wrapper" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+                    <button className="sidebar-handle" aria-label="Open sidebar" style={{ top: "10px" }}>
                         ☰
                     </button>
 
                     <aside className={`sidebar ${open ? "open" : ""}`}>
                         <ul>
                             <li>
-                                <a
-                                    href="#top"
-                                    onClick={(e) => handleNav(e, "#top")}
-                                >
+                                <a href="#top" onClick={e => handleNav(e, "#top")}>
                                     top of page
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="#section1"
-                                    onClick={(e) => handleNav(e, "#top")}
-                                >
+                                <a href="#section1" onClick={e => handleNav(e, "#top")}>
                                     Countdown
                                 </a>
                             </li>
                             <li>
-                                <a
-                                    href="#section2"
-                                    onClick={(e) => handleNav(e, "#section2")}
-                                >
+                                <a href="#section2" onClick={e => handleNav(e, "#section2")}>
                                     Latest Issue
                                 </a>
                             </li>
@@ -189,10 +155,7 @@ export default function Sidebar({ linkColor }) {
                 <a href="#section3" onClick={(e) => handleNav(e, '#section3')}>Past Issues</a>
               </li> */}
                             <li>
-                                <a
-                                    href="#section4"
-                                    onClick={(e) => handleNav(e, "#section4")}
-                                >
+                                <a href="#section4" onClick={e => handleNav(e, "#section4")}>
                                     Games
                                 </a>
                             </li>
@@ -205,9 +168,9 @@ export default function Sidebar({ linkColor }) {
                             <li>
                                 <Link href="/surveys">Surveys</Link>
                             </li>
-                            <li>
+                            {/* <li>
                                 <Link href="/yalies-ranking">the Yankings</Link>
-                            </li>
+                            </li> */}
                         </ul>
                     </aside>
                 </div>
