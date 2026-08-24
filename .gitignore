@@ -45,3 +45,11 @@ next-env.d.ts
 .vscode
 .code-workspace
 rumpus-web.code-workspace
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# my graft 
+opencode.json
+.ignore
+AGENTS.md 
