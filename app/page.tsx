@@ -154,7 +154,7 @@ export default function RumpusHomePage() {
                                 </a>
                                 <p>
                                     or email us directly at{" "}
-                                    <a href="mailto:yalerumpus@gmail.com?subject=[NAME]'s%20Asstastic%20Rumpus%20Application&body=Write%20your%20message%20here">
+                                    <a href="mailto:yalerumpus@gmail.com?subject=[NAME]'s%20Asstastic%20Rumpus%20Application&body=Write%20your%20application%20here">
                                         yalerumpus@gmail.com
                                     </a>
                                 </p>
