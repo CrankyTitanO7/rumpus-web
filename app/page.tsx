@@ -137,8 +137,30 @@ export default function RumpusHomePage() {
 
                             <div className="c-rumpus__item-info">
                                 <h2 className="c-rumpus__item-title">Featured</h2>
+
+                                <a
+                                    href="https://www.instagram.com/p/Dc_aRU-EdVm/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Image
+                                        src="/apply.png"
+                                        alt="apply image"
+                                        width={300}
+                                        height={300}
+                                        style={{ margin: "0 auto" }}
+                                    />
+                                    <p>click here for more details on our instagram page!</p>
+                                </a>
+                                <p>
+                                    or email us directly at{" "}
+                                    <a href="mailto:yalerumpus@gmail.com?subject=[NAME]'s%20Asstastic%20Rumpus%20Application&body=Write%20your%20application%20here">
+                                        yalerumpus@gmail.com
+                                    </a>
+                                </p>
+
                                 <div className="featured-links">
-                                    <Link href="/surveys">take our survey</Link>
+                                    <Link href="/surveys">take our surveys</Link>
                                     <Link href="/archive">browse the archive</Link>
                                     <a
                                         href="https://www.instagram.com/yale.rumpus"
